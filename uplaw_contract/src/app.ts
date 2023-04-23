@@ -1,9 +1,10 @@
 
-import  express from "express";
 
-import * as dotenv from 'dotenv'
+const express = require('express')
 
-//mongodb
+import  dotenv from 'dotenv'
+
+//setup mongodb
 import  db  from './config/mongo'
 db()
 
@@ -15,8 +16,10 @@ import mainRouter from './router/mainRouter'
 dotenv.config()
 const port = process.env.PORT || 3000
 
-//start app
-const app = express()
+//setup Express
+export const app = express()
+
+
 
 // middleware
 app.use(express.json())
@@ -24,7 +27,7 @@ app.use(express.urlencoded({extended:false}))
 
 app.use('/', mainRouter)
 
-// SETUP API 
+// SETUP Application
 app.listen(port, ()=> {
     console.log(`running application on port ${port}`)
 })
