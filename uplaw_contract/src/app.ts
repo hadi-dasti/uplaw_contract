@@ -25,7 +25,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 
 // main router
-app.use( mainRouter)
+app.use(mainRouter)
 
 // SETUP Application
 app.listen(PORT, ()=> {
