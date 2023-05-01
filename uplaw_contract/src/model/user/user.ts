@@ -1,9 +1,12 @@
-import { Schema, model, Document, Model } from 'mongoose';
-import * as dotenv from 'dotenv'
+import { Schema, model, Document, Model } from 'mongoose'
+import {join} from 'path'
+import dotenv from 'dotenv'
 import * as bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
-dotenv.config()
-export const JWT_SECRETE = process.env.JWT_SECRETE || 'noyangolii'
+import jwt, { Secret } from 'jsonwebtoken'
+
+// setup join path as dotenv
+dotenv.config({ path: join(__dirname,'../../../../uplaw_contract/.env')})
+export const JWT_SECRETE = process.env.JWT_SECRETE
 
 // Create an interface representing a document in MongoDB.
 export interface IUser extends Document{
@@ -22,7 +25,6 @@ export interface IUser extends Document{
     verificationCodeSentAt: Date,
     generateAuthEmployeeToken:()=> string
 }
-
 
 // Create a Schema corresponding to the document interface
 export const userSchema = new Schema<IUser>({
@@ -68,7 +70,7 @@ userSchema.pre<Model<IUser> & IUser>('save', async function (next) {
 
 // create toke 
 userSchema.methods.generateAuthEmployeeToken = function () {
-    const token = jwt.sign({ employeeId: this._id },JWT_SECRETE,
+    const token = jwt.sign({ employeeId: this._id },JWT_SECRETE as Secret,
         { expiresIn:'24h' })
     return token
 }

@@ -1,7 +1,12 @@
-import { Request, Response } from 'express'
+import { Request, Response} from 'express'
 import {User,IUser} from '../../model/user/user'
-import {generateOtp} from '../../utile/otp'
+import { generateOtp } from '../../utile/otp'
 
+interface RequestParams {
+  id: string;
+}
+
+//register employee
 export const employeeRegistration = async (req: Request, res: Response)=> {
   try {
             // create field of req.body for push in document
@@ -16,7 +21,6 @@ export const employeeRegistration = async (req: Request, res: Response)=> {
              numberMobile,
              gender,
              isActive,
-             createAt
     } = req.body
           // create document and  save to document
         const employeeData:IUser = await User.create({
@@ -30,7 +34,6 @@ export const employeeRegistration = async (req: Request, res: Response)=> {
              numberMobile,
              gender,
              isActive,
-             createAt
         })
           // check request body
                   if (!employeeData) {
@@ -53,7 +56,6 @@ export const employeeRegistration = async (req: Request, res: Response)=> {
                   })
     }
 }
-
 //login employee
 export const employeeLogin = async(req:Request,res:Response) => {
   try {
@@ -91,8 +93,6 @@ export const employeeLogin = async(req:Request,res:Response) => {
     })
   }
 }
-
-
 //verify login employee with otp 
 export const verifyLoginEmployee = async (req: Request, res: Response) => {
     const { otp, employeeId } = req.body
@@ -132,6 +132,7 @@ export const verifyLoginEmployee = async (req: Request, res: Response) => {
     const getToke = employee.generateAuthEmployeeToken()
 
     // last update document of employee 
+    employee.mobileOtp =""
     await employee.save()
 
     // send token and employeeId of document for login  employee in application 
@@ -149,6 +150,77 @@ export const verifyLoginEmployee = async (req: Request, res: Response) => {
     return res.status(500).json({
       success: false,
       msg : ['Internal Server Error', error.message]
+    })
+  }
+}
+// get All Employee 
+export const getAllEmployee = async (req: Request, res: Response) => {
+  
+  try{
+    const AllEmployee = await User.find({}, {
+    isActive: 0,
+    createdAt:0,  
+    updatedAt: 0,
+    __v: 0,
+    verificationCodeSentAt: 0,
+    mobileOtp:0
+    })
+
+    if (!AllEmployee) {
+      return res.status(404).json({
+        success: false,
+        msg : 'Error Not Found'
+      })
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: AllEmployee ,
+      msg : "successfully get all data of employee document"
+    })
+
+  }catch(err){
+    console.log(err)
+    return res.status(500).json({
+      success: false,
+      msg: "internal Server Error"
+    })
+  }
+}
+
+// get one Employee of database with aggregation pipeline
+export const getOeEmployee = async (req: Request<{id:string}>, res: Response) => {
+      const id = req.params.id
+  try { 
+    const getEmployeeId : IUser | null = await User.findById({ _id: id }, {
+       isActive: 0,
+       createdAt:0,  
+       updatedAt: 0,
+       __v: 0,
+       verificationCodeSentAt: 0,
+       mobileOtp:0
+    })
+
+    // Error not found
+    if (!getEmployeeId) {
+      return res.status(404).json({
+        success: false,
+        msg :"Error Not Found Id Employee of database"
+      })
+    }
+
+    //response data of database
+    return res.status(200).json({
+      success: true,
+      data: getEmployeeId ,
+      msg :"Successfully get One Employee with Id"
+    })
+
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({
+      success: false,
+      msg :"Internal Server Error"
     })
   }
 }

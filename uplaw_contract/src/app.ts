@@ -1,7 +1,6 @@
 
-
 const express = require('express')
-
+import { join } from 'path';
 import  dotenv from 'dotenv'
 
 //setup mongodb
@@ -13,8 +12,8 @@ import mainRouter from './router/mainRouter'
 
 
 // setup  environment variable
-dotenv.config()
-const port = process.env.PORT || 3000
+dotenv.config({ path: join(__dirname,'../../uplaw_contract/.env') })
+export const PORT = process.env.PORT 
 
 //setup Express
 export const app = express()
@@ -25,9 +24,10 @@ export const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 
+
 app.use('/', mainRouter)
 
 // SETUP Application
-app.listen(port, ()=> {
-    console.log(`running application on port ${port}`)
+app.listen(PORT, ()=> {
+    console.log(`running application on port ${PORT}`)
 })
