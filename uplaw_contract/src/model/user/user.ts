@@ -23,7 +23,8 @@ export interface IUser extends Document{
     mobileOtp: string,
     createAt: Date,
     verificationCodeSentAt: Date,
-    generateAuthEmployeeToken:()=> string
+    generateAuthEmployeeToken: () => string,
+    isComparePassword:(password: string)=> Promise<boolean>
 }
 
 // Create a Schema corresponding to the document interface
@@ -43,7 +44,7 @@ export const userSchema = new Schema<IUser>({
             },
             required :[true,'please provide a age']
         },
-        nationalCode: { type: String , minlength:9, required: [true,'please provide a nationalCode']},
+        nationalCode: { type: String , minlength:9, unique:true, required: [true,'please provide a nationalCode']},
         numberMobile: { type: String, minlength: 11, required: [true, 'please provide a numberMobile'] },
         gender: { type: String, enum: ['MALE', 'FEMALE'], required: [true, 'please provide a gender'] },
         isActive: { type: Boolean, required: [true, 'please provide a isActive'] },
@@ -67,6 +68,12 @@ userSchema.pre<Model<IUser> & IUser>('save', async function (next) {
   user.password = await bcrypt.hash(user.password, salt);
   next();
 });
+
+    // compare password
+userSchema.methods.isComparePassword = async function (password: string) {
+    return await bcrypt.compare(password,this.password)
+} 
+
 
 // create toke 
 userSchema.methods.generateAuthEmployeeToken = function () {

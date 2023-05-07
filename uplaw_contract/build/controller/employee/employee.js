@@ -9,13 +9,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.employeeLogin = exports.employeeRegistration = void 0;
+exports.verifyNumberMobileEmployee = exports.employeeForgetNumberMobile = exports.getOeEmployee = exports.getAllEmployee = exports.verifyLoginEmployee = exports.employeeLogin = exports.employeeRegistration = void 0;
 const user_1 = require("../../model/user/user");
 const otp_1 = require("../../utile/otp");
+//register employee
 const employeeRegistration = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // create field of req.body for push in document
-        const { firstName, lastName, password, address, email, age, nationalCode, numberMobile, gender, isActive, createAt } = req.body;
+        const { firstName, lastName, password, address, email, age, nationalCode, numberMobile, gender, isActive, } = req.body;
         // create document and  save to document
         const employeeData = yield user_1.User.create({
             firstName,
@@ -28,7 +29,6 @@ const employeeRegistration = (req, res) => __awaiter(void 0, void 0, void 0, fun
             numberMobile,
             gender,
             isActive,
-            createAt
         });
         // check request body
         if (!employeeData) {
@@ -67,11 +67,13 @@ const employeeLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         // generate otp employee
         let otp = (0, otp_1.generateOtp)(6);
         checkMobileNumber.mobileOtp = otp;
-        console.log(otp);
         yield checkMobileNumber.save();
         return res.status(200).json({
             success: true,
-            data: { employeeId: checkMobileNumber._id },
+            data: {
+                employeeId: checkMobileNumber._id,
+                createOtp: otp
+            },
             msg: 'successfully send otp to mobileNumber employee'
         });
     }
@@ -84,3 +86,205 @@ const employeeLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.employeeLogin = employeeLogin;
+//verify login employee with otp 
+const verifyLoginEmployee = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { otp, employeeId } = req.body;
+    try {
+        //check find employee with id of database
+        const employee = yield user_1.User.findById({ _id: employeeId });
+        if (!employee) {
+            return res.status(404).json({
+                success: false,
+                msg: 'workerId not found'
+            });
+        }
+        // build time  for verify and login employee
+        const now = new Date();
+        const timeDiff = now.getTime() - employee.verificationCodeSentAt.getTime();
+        const minutesDiff = Math.floor(timeDiff / 60000);
+        const time = 5 * 60 * 1000;
+        // check and match time 
+        if (minutesDiff > time) {
+            return res.status(400).json({
+                success: false,
+                msg: 'Verification code has expired'
+            });
+        }
+        // match otp 
+        if (employee.mobileOtp !== otp) {
+            return res.status(400).json({
+                success: false,
+                msg: 'Invalid verification code'
+            });
+        }
+        // Generate JWT
+        const getToken = employee.generateAuthEmployeeToken();
+        // last update document of employee 
+        employee.mobileOtp = "";
+        yield employee.save();
+        // send token and employeeId of document for login  employee in application 
+        return res.status(200).json({
+            success: true,
+            data: {
+                getToken,
+                employeeID: employee._id
+            },
+            msg: "successfully login employee with mobileNumber "
+        });
+    }
+    catch (error) {
+        return res.status(500).json({
+            success: false,
+            msg: ['Internal Server Error', error.message]
+        });
+    }
+});
+exports.verifyLoginEmployee = verifyLoginEmployee;
+// get All Employee 
+const getAllEmployee = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const AllEmployee = yield user_1.User.find({}, {
+            isActive: 0,
+            createdAt: 0,
+            updatedAt: 0,
+            __v: 0,
+            verificationCodeSentAt: 0,
+            mobileOtp: 0
+        });
+        if (!AllEmployee) {
+            return res.status(404).json({
+                success: false,
+                msg: 'Error Not Found'
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            data: AllEmployee,
+            msg: "successfully get all data of employee document"
+        });
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            msg: "internal Server Error"
+        });
+    }
+});
+exports.getAllEmployee = getAllEmployee;
+// get one Employee of database 
+const getOeEmployee = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    try {
+        const getEmployeeId = yield user_1.User.findById({ _id: id }, {
+            isActive: 0,
+            createdAt: 0,
+            updatedAt: 0,
+            __v: 0,
+            verificationCodeSentAt: 0,
+            mobileOtp: 0
+        });
+        // Error not found
+        if (!getEmployeeId) {
+            return res.status(404).json({
+                success: false,
+                msg: "Error Not Found Id Employee of database"
+            });
+        }
+        //response data of database
+        return res.status(200).json({
+            success: true,
+            data: getEmployeeId,
+            msg: "Successfully get One Employee with Id"
+        });
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            msg: "Internal Server Error"
+        });
+    }
+});
+exports.getOeEmployee = getOeEmployee;
+//forget mobileNumber
+const employeeForgetNumberMobile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { nationalCode, password } = req.body;
+    try {
+        // get nationalCode employee as database
+        const getEmployee = yield user_1.User.findOne({ nationalCode });
+        if (!getEmployee) {
+            return res.status(400).json({
+                success: false,
+                msg: 'Error Not Found nationalCode employee of database'
+            });
+        }
+        // match password employee
+        const isMatchPassword = yield getEmployee.isComparePassword(password);
+        if (!isMatchPassword) {
+            return res.status(400).json({
+                success: false,
+                msg: 'password is not match '
+            });
+        }
+        // create lastFourNumber as mobileNumber Employee
+        const lastFourNumber = getEmployee.numberMobile.slice(-4);
+        // response mobileNumber for employee
+        return res.status(200).json({
+            success: true,
+            data: `mobileNumber:******${lastFourNumber}  ${"+"}  ${getEmployee._id} `,
+            msg: 'successfully Get mobileNumber as database then show to employee'
+        });
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            mag: 'internal Server Error'
+        });
+    }
+});
+exports.employeeForgetNumberMobile = employeeForgetNumberMobile;
+// verify reset mobileNumber Employee
+const verifyNumberMobileEmployee = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { lastFourDigits, employeeId } = req.body;
+    try {
+        const getEmployee = yield user_1.User.findById({ _id: employeeId });
+        // search notionalCode employee of database
+        if (!getEmployee) {
+            return res.status(400).json({
+                success: false,
+                msg: "Not Found NationalCode Employee"
+            });
+        }
+        // match last 4 numberMobile employee
+        if (getEmployee.numberMobile.slice(-4) !== lastFourDigits) {
+            return res.status(400).json({
+                success: false,
+                msg: 'Not Match for lastFourDigits with numberMobile'
+            });
+        }
+        // generate otp  for mobileNumber employee 
+        let otp = (0, otp_1.generateOtp)(6);
+        getEmployee.mobileOtp = otp;
+        yield getEmployee.save();
+        //TODO
+        // send code otp For MobileNumber Employee
+        return res.status(201).json({
+            success: true,
+            data: {
+                createOtp: otp,
+                employee: getEmployee._id
+            },
+            msg: 'successfully verify mobileNumber  and send code otp for employee'
+        });
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            msg: 'Internal Server Error'
+        });
+    }
+});
+exports.verifyNumberMobileEmployee = verifyNumberMobileEmployee;

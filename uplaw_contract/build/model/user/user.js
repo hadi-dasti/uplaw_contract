@@ -31,10 +31,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = exports.userSchema = void 0;
+exports.User = exports.userSchema = exports.JWT_SECRETE = void 0;
 const mongoose_1 = require("mongoose");
+const path_1 = require("path");
+const dotenv_1 = __importDefault(require("dotenv"));
 const bcrypt = __importStar(require("bcryptjs"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+// setup join path as dotenv
+dotenv_1.default.config({ path: (0, path_1.join)(__dirname, '../../../../uplaw_contract/.env') });
+exports.JWT_SECRETE = process.env.JWT_SECRETE;
 // Create a Schema corresponding to the document interface
 exports.userSchema = new mongoose_1.Schema({
     firstName: { type: String, required: [true, 'please provide a firstName'] },
@@ -52,12 +61,13 @@ exports.userSchema = new mongoose_1.Schema({
         },
         required: [true, 'please provide a age']
     },
-    nationalCode: { type: String, minlength: 9, required: [true, 'please provide a nationalCode'] },
+    nationalCode: { type: String, minlength: 9, unique: true, required: [true, 'please provide a nationalCode'] },
     numberMobile: { type: String, minlength: 11, required: [true, 'please provide a numberMobile'] },
     gender: { type: String, enum: ['MALE', 'FEMALE'], required: [true, 'please provide a gender'] },
     isActive: { type: Boolean, required: [true, 'please provide a isActive'] },
-    mobileOtp: { type: String, minlength: 6, required: false },
+    mobileOtp: { type: String, required: false },
     createAt: { type: Date, default: Date.now },
+    verificationCodeSentAt: { type: Date, default: Date.now, required: false }
 }, {
     timestamps: true
 });
@@ -74,5 +84,16 @@ exports.userSchema.pre('save', function (next) {
         next();
     });
 });
+// compare password
+exports.userSchema.methods.isComparePassword = function (password) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield bcrypt.compare(password, this.password);
+    });
+};
+// create toke 
+exports.userSchema.methods.generateAuthEmployeeToken = function () {
+    const token = jsonwebtoken_1.default.sign({ employeeId: this._id }, exports.JWT_SECRETE, { expiresIn: '24h' });
+    return token;
+};
 //  Create a Model.
 exports.User = (0, mongoose_1.model)('User', exports.userSchema);

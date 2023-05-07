@@ -2,26 +2,24 @@ import { Request, Response} from 'express'
 import {User,IUser} from '../../model/user/user'
 import { generateOtp } from '../../utile/otp'
 
-interface RequestParams {
-  id: string;
-}
+
 
 //register employee
 export const employeeRegistration = async (req: Request, res: Response)=> {
   try {
             // create field of req.body for push in document
-     const {
-             firstName,
-             lastName,
-             password,
-             address,
-             email,
-             age,
-             nationalCode,
-             numberMobile,
-             gender,
-             isActive,
-    } = req.body
+    const {
+      firstName,
+      lastName,
+      password,
+      address,
+      email,
+      age,
+      nationalCode,
+      numberMobile,
+      gender,
+      isActive,
+    } = req.body;
           // create document and  save to document
         const employeeData:IUser = await User.create({
             firstName,
@@ -97,6 +95,7 @@ export const employeeLogin = async(req:Request,res:Response) => {
 export const verifyLoginEmployee = async (req: Request, res: Response) => {
     const { otp, employeeId } = req.body
   try {  
+    
      //check find employee with id of database
     const employee = await User.findById({_id:employeeId})
     if (!employee) {
@@ -129,7 +128,7 @@ export const verifyLoginEmployee = async (req: Request, res: Response) => {
     }
 
     // Generate JWT
-    const getToke = employee.generateAuthEmployeeToken()
+    const getToken = employee.generateAuthEmployeeToken()
 
     // last update document of employee 
     employee.mobileOtp =""
@@ -139,14 +138,13 @@ export const verifyLoginEmployee = async (req: Request, res: Response) => {
     return res.status(200).json({
       success: true,
       data: {
-        getToke,
+        getToken,
         employeeID : employee._id
       },
       msg :"successfully login employee with mobileNumber "
     })
 
   } catch (error:any) {
-    console.log(error)
     return res.status(500).json({
       success: false,
       msg : ['Internal Server Error', error.message]
@@ -188,7 +186,7 @@ export const getAllEmployee = async (req: Request, res: Response) => {
   }
 }
 
-// get one Employee of database with aggregation pipeline
+// get one Employee of database 
 export const getOeEmployee = async (req: Request<{id:string}>, res: Response) => {
       const id = req.params.id
   try { 
@@ -221,6 +219,97 @@ export const getOeEmployee = async (req: Request<{id:string}>, res: Response) =>
     return res.status(500).json({
       success: false,
       msg :"Internal Server Error"
+    })
+  }
+}
+
+
+
+
+//forget mobileNumber
+export const employeeForgetNumberMobile = async(req:Request,res:Response) => {
+  const {nationalCode,password} = req.body
+  try {
+    // get nationalCode employee as database
+    const getEmployee: IUser | null = await User.findOne({nationalCode})
+    if (!getEmployee) {
+      return res.status(400).json({
+        success: false,
+        msg : 'Error Not Found nationalCode employee of database'
+      })
+    }
+
+    // match password employee
+    const isMatchPassword = await getEmployee.isComparePassword(password)
+    if (!isMatchPassword) {
+      return res.status(400).json({
+        success: false,
+        msg :'password is not match '
+      })
+    }
+
+    // create lastFourNumber as mobileNumber Employee
+    const lastFourNumber = getEmployee.numberMobile.slice(-4)
+
+    // response mobileNumber for employee
+    return res.status(200).json({
+      success: true,
+      data: `mobileNumber:******${lastFourNumber}  ${"+"}  ${getEmployee._id} `,
+      msg:'successfully Get mobileNumber as database then show to employee'
+    })
+
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({
+      success: false,
+      mag :'internal Server Error'
+    })
+  }
+}
+// verify reset mobileNumber Employee
+export const verifyNumberMobileEmployee = async (req: Request<{id:string}>, res: Response) => {
+  const {lastFourDigits, employeeId } = req.body
+  try {
+
+    const getEmployee: IUser | null = await User.findById({ _id: employeeId })
+    // search notionalCode employee of database
+    if (!getEmployee) {
+      return res.status(400).json({
+        success: false,
+        msg:"Not Found NationalCode Employee"
+      })
+    }
+
+    // match last 4 numberMobile employee
+    if (getEmployee.numberMobile.slice(-4) !== lastFourDigits) {
+      return res.status(400).json({
+        success: false,
+        msg :'Not Match for lastFourDigits with numberMobile'
+      })
+    }
+
+    // generate otp  for mobileNumber employee 
+    let otp = generateOtp(6)
+    getEmployee.mobileOtp = otp
+    await getEmployee.save()
+
+    //TODO
+    // send code otp For MobileNumber Employee
+     
+    return res.status(201).json({
+      success: true,
+      data: {
+        createOtp: otp,
+        employee: getEmployee._id
+      },
+      msg :'successfully verify mobileNumber  and send code otp for employee'
+    })
+
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({
+      success: false,
+      msg :'Internal Server Error'
     })
   }
 }
