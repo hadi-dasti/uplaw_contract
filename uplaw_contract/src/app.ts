@@ -22,7 +22,10 @@ export const app = express()
 
 // middleware
 app.use(express.json())
-app.use(express.urlencoded({extended:false}))
+app.use(express.urlencoded({ extended: false }))
+
+// path for uploadImage employee
+app.use('/image',express.static(join(__dirname,'image')))
 
 // main router
 app.use(mainRouter)

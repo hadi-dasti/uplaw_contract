@@ -6,6 +6,9 @@ import { generateOtp } from '../../utile/otp'
 
 //register employee
 export const employeeRegistration = async (req: Request, res: Response)=> {
+   // upload filename photo
+    const file = req.file;
+    // console.log(file)
   try {
             // create field of req.body for push in document
     const {
@@ -19,6 +22,7 @@ export const employeeRegistration = async (req: Request, res: Response)=> {
       numberMobile,
       gender,
       isActive,
+      profileImage
     } = req.body;
           // create document and  save to document
         const employeeData:IUser = await User.create({
@@ -31,7 +35,8 @@ export const employeeRegistration = async (req: Request, res: Response)=> {
              nationalCode,
              numberMobile,
              gender,
-             isActive,
+              isActive,
+             profileImage
         })
           // check request body
                   if (!employeeData) {
@@ -43,7 +48,7 @@ export const employeeRegistration = async (req: Request, res: Response)=> {
             // response data from employee       
                     return res.status(201).json({
                        success: true,
-                       data: {createDataEmployee : employeeData},
+                       data: {createDataEmployee : employeeData._id},
                        msg : 'successfully create document user on database'
                    })
                   

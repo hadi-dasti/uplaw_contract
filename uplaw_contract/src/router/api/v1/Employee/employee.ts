@@ -1,11 +1,14 @@
 import { Router } from 'express'
 const router: Router = Router()
+
 //import employee controller 
  import {employeeRegistration,employeeLogin,verifyLoginEmployee,getAllEmployee,getOeEmployee,employeeForgetNumberMobile,verifyNumberMobileEmployee} from '../../../../controller/employee/employee'
 
+// middleware for upload image employee
+import uploadImage  from '../../../../middleware/upload/uploadImage'
 
 //create router employee 
-router.post('/register', employeeRegistration)
+router.post('/register', uploadImage.single('profileImage'), employeeRegistration)
 router.post('/login', employeeLogin)
 router.post('/verifyEmployeeLogin',verifyLoginEmployee)
 router.get('/getAllEmployee', getAllEmployee)
