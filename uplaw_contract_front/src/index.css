@@ -1,0 +1,19 @@
+html,
+body {
+  font-family: sans-serif;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+.MuiCard-root::-webkit-scrollbar {
+  display: none;
+}
+.MuiGrid2-root::-webkit-scrollbar {
+  display: none;
+}
+
+a:-webkit-any-link {
+  color: inherit;
+  text-decoration: none;
+}
