@@ -73,10 +73,10 @@ export const employeeRegistration = async (req: Request, res: Response) => {
 export const employeeLogin = async(req:Request,res:Response) => {
   try {
     
-    const { firstName, lastName, password } = req.body
+    const { email, password } = req.body
     
     // check numberMobile employee
-    const employees = await User.findOne({firstName, lastName})
+    const employees = await User.findOne({email})
     if (!employees) {
       return res.status(404).json({
         success: false,
@@ -115,6 +115,7 @@ export const employeeLogin = async(req:Request,res:Response) => {
     })
   }
 }
+
 //verify login employee with otp 
 export const verifyLoginEmployee = async (req: Request, res: Response) => {
     const { otp, employeeId } = req.body

@@ -22,7 +22,7 @@ export const validateRegisterEmployee = (req: Request, res: Response, next: Next
             'string.max': 'Last name cannot be longer than {{#limit}} characters',
             'any.required': 'Last name is required'
         }),
-        password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).messages({
+        password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{6,30}$')).messages({
             'string.pattern.base': 'Password must be between 3 and 30 characters and contain only alpha-numeric characters'
         }),
         address: Joi.string().min(10).trim().required().messages({
@@ -88,19 +88,12 @@ export const validateRegisterEmployee = (req: Request, res: Response, next: Next
 // Define the Joi schema for validating the request body of login employee
 export const validateLoginEmployee = (req: Request, res: Response, next: NextFunction) => {
     //req.body of login employee
-     const employeeSchemaLogin = Joi.object({
-        firstName: Joi.string().alphanum().min(3).max(10).required().messages({
-            'string.alphanum': 'First name must only contain alpha-numeric characters',
-            'string.min': 'First name must be at least {{#limit}} characters long',
-            'string.max': 'First name cannot be longer than {{#limit}} characters',
-            'any.required': 'First name is required'
+    const employeeSchemaLogin = Joi.object({
+            email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({
+            'string.email': 'Please provide a valid email address',
+            'any.required': 'Email is required'
         }),
-        lastName: Joi.string().trim().min(2).max(20).required().messages({
-            'string.min': 'Last name must be at least {{#limit}} characters long',
-            'string.max': 'Last name cannot be longer than {{#limit}} characters',
-            'any.required': 'Last name is required'
-        }),
-        password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).messages({
+        password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{6,30}$')).messages({
             'string.pattern.base': 'Password must be between 3 and 30 characters and contain only alpha-numeric characters'
         }),
         })
