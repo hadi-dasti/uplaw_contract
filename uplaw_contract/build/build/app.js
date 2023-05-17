@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.app = exports.PORT = void 0;
 const express = require('express');
 const path_1 = require("path");
-const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
 //setup mongodb
 const mongo_1 = __importDefault(require("./config/mongo"));
@@ -20,8 +19,7 @@ exports.PORT = process.env.PORT;
 exports.app = express();
 // middleware
 exports.app.use(express.json());
-exports.app.use(express.urlencoded({ extended: true }));
-exports.app.use((0, cors_1.default)());
+exports.app.use(express.urlencoded({ extended: false }));
 // path for uploadImage employee
 exports.app.use('/image', express.static((0, path_1.join)(__dirname, 'image')));
 // main router

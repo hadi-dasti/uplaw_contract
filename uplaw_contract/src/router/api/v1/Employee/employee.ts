@@ -5,12 +5,15 @@ const router: Router = Router()
  import {employeeRegistration,employeeLogin,verifyLoginEmployee,getAllEmployee,getOeEmployee,employeeForgetNumberMobile,verifyNumberMobileEmployee} from '../../../../controller/employee/employee'
 
 // middleware for upload image employee
-import uploadImage  from '../../../../middleware/upload/uploadImage'
+import uploadImage from '../../../../middleware/upload/uploadImage';
+
+// validation employee
+import { validateRegisterEmployee,validateLoginEmployee ,validateVerifyEmployee } from '../../../../validator/employeeValidator/employeeValidation';
 
 //create router employee 
-router.post('/register', uploadImage.single('profileImage'), employeeRegistration)
-router.post('/login', employeeLogin)
-router.post('/verifyEmployeeLogin',verifyLoginEmployee)
+router.post('/register', uploadImage.single('profileImage'), validateRegisterEmployee, employeeRegistration)
+router.post('/login',validateLoginEmployee , employeeLogin)
+router.post('/verifyEmployeeLogin',validateVerifyEmployee,verifyLoginEmployee)
 router.get('/getAllEmployee', getAllEmployee)
 router.get('/getOneEmployee/:id', getOeEmployee)
 

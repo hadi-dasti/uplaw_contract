@@ -2,26 +2,36 @@
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function fulfilled(value) { try {
+            step(generator.next(value));
+        }
+        catch (e) {
+            reject(e);
+        } }
+        function rejected(value) { try {
+            step(generator["throw"](value));
+        }
+        catch (e) {
+            reject(e);
+        } }
         function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyNumberMobileEmployee = exports.employeeForgetNumberMobile = exports.getOeEmployee = exports.getAllEmployee = exports.verifyLoginEmployee = exports.employeeLogin = exports.employeeRegistration = void 0;
-const User_1 = require("../../model/employee/User");
+const user_1 = require("../../model/user/user");
 const otp_1 = require("../../utile/otp");
-const sendEmail_1 = require("../../utile/sendEmail");
 //register employee
 const employeeRegistration = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // upload filename photo
     const file = req.file;
+    // console.log(file)
     try {
         // create field of req.body for push in document
-        const { firstName, lastName, password, address, email, age, nationalCode, numberMobile, gender, isActive, createAt, profileImage } = req.body;
+        const { firstName, lastName, password, address, email, age, nationalCode, numberMobile, gender, isActive, profileImage } = req.body;
         // create document and  save to document
-        const employeeData = yield User_1.User.create({
+        const employeeData = yield user_1.User.create({
             firstName,
             lastName,
             password,
@@ -32,7 +42,6 @@ const employeeRegistration = (req, res) => __awaiter(void 0, void 0, void 0, fun
             numberMobile,
             gender,
             isActive,
-            createAt,
             profileImage
         });
         // check request body
@@ -42,9 +51,7 @@ const employeeRegistration = (req, res) => __awaiter(void 0, void 0, void 0, fun
                 msg: 'Not Found Error'
             });
         }
-        // send email to employee for register successfully
-        yield (0, sendEmail_1.sendRegistrationEmail)(employeeData.email, employeeData.firstName);
-        // response data from employee
+        // response data from employee       
         return res.status(201).json({
             success: true,
             data: { createDataEmployee: employeeData._id },
@@ -54,7 +61,7 @@ const employeeRegistration = (req, res) => __awaiter(void 0, void 0, void 0, fun
     catch (error) {
         return res.status(500).json({
             success: false,
-            msg: ['Internal Server Error', error.message]
+            msg: ['Internal Server Error', error]
         });
     }
 });
@@ -62,32 +69,24 @@ exports.employeeRegistration = employeeRegistration;
 //login employee
 const employeeLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { firstName, lastName, password } = req.body;
         // check numberMobile employee
-        const employees = yield User_1.User.findOne({ firstName, lastName });
-        if (!employees) {
+        const { numberMobile } = req.body;
+        const checkMobileNumber = yield user_1.User.findOne({ numberMobile });
+        if (!checkMobileNumber) {
             return res.status(404).json({
                 success: false,
-                msg: "Employee details were not found in the database"
-            });
-        }
-        // match password employee  
-        const isMatchPassword = yield employees.isComparePassword(password);
-        if (!isMatchPassword) {
-            return res.status(400).json({
-                success: false,
-                msg: 'password is not match '
+                msg: 'mobileNumber_not_found_ERR'
             });
         }
         // generate otp employee
         let otp = (0, otp_1.generateOtp)(6);
-        employees.mobileOtp = otp;
-        yield employees.save();
+        checkMobileNumber.mobileOtp = otp;
+        yield checkMobileNumber.save();
         return res.status(200).json({
             success: true,
             data: {
-                createOtp: otp,
-                employee: employees._id
+                employeeId: checkMobileNumber._id,
+                createOtp: otp
             },
             msg: 'successfully send otp to mobileNumber employee'
         });
@@ -106,7 +105,7 @@ const verifyLoginEmployee = (req, res) => __awaiter(void 0, void 0, void 0, func
     const { otp, employeeId } = req.body;
     try {
         //check find employee with id of database
-        const employee = yield User_1.User.findById({ _id: employeeId });
+        const employee = yield user_1.User.findById({ _id: employeeId });
         if (!employee) {
             return res.status(404).json({
                 success: false,
@@ -158,7 +157,7 @@ exports.verifyLoginEmployee = verifyLoginEmployee;
 // get All Employee 
 const getAllEmployee = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const AllEmployee = yield User_1.User.find({}, {
+        const AllEmployee = yield user_1.User.find({}, {
             isActive: 0,
             createdAt: 0,
             updatedAt: 0,
@@ -191,7 +190,7 @@ exports.getAllEmployee = getAllEmployee;
 const getOeEmployee = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     try {
-        const getEmployeeId = yield User_1.User.findById({ _id: id }, {
+        const getEmployeeId = yield user_1.User.findById({ _id: id }, {
             isActive: 0,
             createdAt: 0,
             updatedAt: 0,
@@ -227,7 +226,7 @@ const employeeForgetNumberMobile = (req, res) => __awaiter(void 0, void 0, void 
     const { nationalCode, password } = req.body;
     try {
         // get nationalCode employee as database
-        const getEmployee = yield User_1.User.findOne({ nationalCode });
+        const getEmployee = yield user_1.User.findOne({ nationalCode });
         if (!getEmployee) {
             return res.status(400).json({
                 success: false,
@@ -235,13 +234,13 @@ const employeeForgetNumberMobile = (req, res) => __awaiter(void 0, void 0, void 
             });
         }
         // match password employee
-        // const isMatchPassword = await getEmployee.isComparePassword(password)
-        // if (!isMatchPassword) {
-        //   return res.status(400).json({
-        //     success: false,
-        //     msg :'password is not match '
-        //   })
-        // }
+        const isMatchPassword = yield getEmployee.isComparePassword(password);
+        if (!isMatchPassword) {
+            return res.status(400).json({
+                success: false,
+                msg: 'password is not match '
+            });
+        }
         // create lastFourNumber as mobileNumber Employee
         const lastFourNumber = getEmployee.numberMobile.slice(-4);
         // response mobileNumber for employee
@@ -264,7 +263,7 @@ exports.employeeForgetNumberMobile = employeeForgetNumberMobile;
 const verifyNumberMobileEmployee = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { lastFourDigits, employeeId } = req.body;
     try {
-        const getEmployee = yield User_1.User.findById({ _id: employeeId });
+        const getEmployee = yield user_1.User.findById({ _id: employeeId });
         // search notionalCode employee of database
         if (!getEmployee) {
             return res.status(400).json({

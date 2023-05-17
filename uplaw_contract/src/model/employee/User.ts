@@ -25,7 +25,7 @@ export interface IUser extends Document{
     verificationCodeSentAt: Date,
     profileImage : string,
     generateAuthEmployeeToken: () => string,
-    isComparePassword:(password: string)=> Promise<boolean>
+    isComparePassword:(password: string) => Promise<boolean>
 }
 
 // Create a Schema corresponding to the document interface
@@ -50,7 +50,7 @@ export const userSchema = new Schema<IUser>({
         gender: { type: String, enum: ['MALE', 'FEMALE'], required: [true, 'please provide a gender'] },
         isActive: { type: Boolean, required: [true, 'please provide a isActive'] },
         mobileOtp:{type : String, required:false},
-        createAt: { type: Date, default: Date.now },
+        createAt: { type: Date, default: Date.now ,required:[true,'please provide a profileImage']},
         profileImage:{type:String ,required:[false,'please provide a profileImage']},
         verificationCodeSentAt: { type: Date, default: Date.now, required: false }
     }, {

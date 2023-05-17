@@ -9,12 +9,10 @@ const router = (0, express_1.Router)();
 const employee_1 = require("../../../../controller/employee/employee");
 // middleware for upload image employee
 const uploadImage_1 = __importDefault(require("../../../../middleware/upload/uploadImage"));
-// validation employee
-const employeeValidation_1 = require("../../../../validator/employeeValidator/employeeValidation");
 //create router employee 
-router.post('/register', uploadImage_1.default.single('profileImage'), employeeValidation_1.validateRegisterEmployee, employee_1.employeeRegistration);
-router.post('/login', employeeValidation_1.validateLoginEmployee, employee_1.employeeLogin);
-router.post('/verifyEmployeeLogin', employeeValidation_1.validateVerifyEmployee, employee_1.verifyLoginEmployee);
+router.post('/register', uploadImage_1.default.single('profileImage'), employee_1.employeeRegistration);
+router.post('/login', employee_1.employeeLogin);
+router.post('/verifyEmployeeLogin', employee_1.verifyLoginEmployee);
 router.get('/getAllEmployee', employee_1.getAllEmployee);
 router.get('/getOneEmployee/:id', employee_1.getOeEmployee);
 // create router for forget and reset mobileNumber employee of database

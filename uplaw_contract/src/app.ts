@@ -1,6 +1,7 @@
 
 const express = require('express')
-import { join } from 'path';
+import { join } from 'path'
+import  cors  from 'cors'
 import  dotenv from 'dotenv'
 
 //setup mongodb
@@ -22,7 +23,9 @@ export const app = express()
 
 // middleware
 app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: true }))
+
+app.use(cors())
 
 // path for uploadImage employee
 app.use('/image',express.static(join(__dirname,'image')))

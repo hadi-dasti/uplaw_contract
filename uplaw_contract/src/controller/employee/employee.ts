@@ -1,14 +1,16 @@
 import { Request, Response} from 'express'
-import {User,IUser} from '../../model/user/user'
+import {User,IUser} from '../../model/employee/User'
 import { generateOtp } from '../../utile/otp'
+import {sendRegistrationEmail}from '../../utile/sendEmail'
 
 
 
 //register employee
-export const employeeRegistration = async (req: Request, res: Response)=> {
+export const employeeRegistration = async (req: Request, res: Response) => {
+  
    // upload filename photo
     const file = req.file;
-    // console.log(file)
+    
   try {
             // create field of req.body for push in document
     const {
@@ -22,11 +24,13 @@ export const employeeRegistration = async (req: Request, res: Response)=> {
       numberMobile,
       gender,
       isActive,
+      createAt,
       profileImage
     } = req.body;
+
           // create document and  save to document
         const employeeData:IUser = await User.create({
-            firstName,
+             firstName,
              lastName,
              password,
              address,
@@ -35,7 +39,8 @@ export const employeeRegistration = async (req: Request, res: Response)=> {
              nationalCode,
              numberMobile,
              gender,
-              isActive,
+             isActive,
+             createAt,
              profileImage
         })
           // check request body
@@ -45,45 +50,59 @@ export const employeeRegistration = async (req: Request, res: Response)=> {
                           msg : 'Not Found Error'
                        })
                   }
-            // response data from employee       
+            
+             // send email to employee for register successfully
+    await sendRegistrationEmail(employeeData.email, employeeData.firstName)
+    
+            // response data from employee
                     return res.status(201).json({
                        success: true,
                        data: {createDataEmployee : employeeData._id},
                        msg : 'successfully create document user on database'
                    })
                   
-    } catch (error) {
+    } catch (error:any) {
                     return res.status(500).json({
                       success: false,
-                      msg : ['Internal Server Error', error]
+                      msg : ['Internal Server Error', error.message]
                   })
     }
 }
+
 //login employee
 export const employeeLogin = async(req:Request,res:Response) => {
   try {
-    // check numberMobile employee
-    const { numberMobile } = req.body
-
-    const checkMobileNumber = await User.findOne({ numberMobile })
     
-    if (! checkMobileNumber) {
+    const { firstName, lastName, password } = req.body
+    
+    // check numberMobile employee
+    const employees = await User.findOne({firstName, lastName})
+    if (!employees) {
       return res.status(404).json({
         success: false,
-        msg : 'mobileNumber_not_found_ERR'
+        msg : "Employee details were not found in the database"
+      })
+    }
+
+    // match password employee  
+    const isMatchPassword = await employees.isComparePassword(password)
+    if (!isMatchPassword) {
+      return res.status(400).json({
+        success: false,
+        msg :'password is not match '
       })
     }
 
     // generate otp employee
     let otp = generateOtp(6)
-    checkMobileNumber.mobileOtp = otp
-    await checkMobileNumber.save()
+    employees.mobileOtp = otp
+    await employees.save()
     
     return res.status(200).json({
       success: true,
       data: {
-        employeeId: checkMobileNumber._id,
-        createOtp : otp
+        createOtp: otp,
+        employee: employees._id
       },
       msg:'successfully send otp to mobileNumber employee'
     })
@@ -245,13 +264,13 @@ export const employeeForgetNumberMobile = async(req:Request,res:Response) => {
     }
 
     // match password employee
-    const isMatchPassword = await getEmployee.isComparePassword(password)
-    if (!isMatchPassword) {
-      return res.status(400).json({
-        success: false,
-        msg :'password is not match '
-      })
-    }
+    // const isMatchPassword = await getEmployee.isComparePassword(password)
+    // if (!isMatchPassword) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     msg :'password is not match '
+    //   })
+    // }
 
     // create lastFourNumber as mobileNumber Employee
     const lastFourNumber = getEmployee.numberMobile.slice(-4)
