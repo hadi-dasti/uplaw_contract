@@ -150,3 +150,74 @@ export const validateVerifyEmployee = (req: Request, res: Response, next: NextFu
         })
     }
 }
+
+// Define the joi Schema for validation request body of forget password employee
+export const validateForgetPasswordEmployee = (req:Request, res:Response, next:NextFunction) => {
+    // request body of forget password
+    const employeeForgetSchema = Joi.object({
+        nationalCode: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
+            'string.pattern.base': 'National code must be exactly 10 digits',
+            'any.required': 'National code is required'
+        }),
+    })
+    //handling error 
+    try {
+        const { error }  = employeeForgetSchema.validate(req.body, { abortEarly: true })
+        if (error) {
+           const errors =  error.details.map(detail => detail.message)
+            return res.status(400).json({
+                success: false,
+                msg : errors.join(',')
+            })
+        }
+
+        return next()
+
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            success: false,
+            msg : 'Internal Server Error'
+       })
+    }
+} 
+
+// Define validation for reset password of employee
+export const validateResetPasswordEmployee = (req: Request, res: Response, next: NextFunction) => {
+    // request body  for reset Password
+    const validateSchemaEmployee = Joi.object({
+        employeeId: Joi.string().alphanum().length(24).required().messages({
+             'string.base': 'employeeId must be a string',
+             'string.alphaNum': 'employeeId must only contain alphanumeric characters',
+             'string.length': 'employeeId must be exactly 24 characters long',
+             'any.required': 'employeeId is required'
+        }),
+        lastFourDigits:Joi.string().length(4).pattern(/^\d+$/).required().messages({
+      'string.base': 'Last four digits must be a string',
+      'string.length': 'Last four digits must be exactly 4 characters long',
+      'string.pattern.base': 'Last four digits must only contain numeric characters',
+      'any.required': 'Last four digits are required',
+    }),
+    })
+
+    // handle error for response
+    try {
+        const { error } = validateSchemaEmployee.validate(req.body, { abortEarly: true })
+        if (error) {
+            const errors = error.details.map(detail => detail.message)
+            return res.status(400).json({
+                success: false,
+                msg : errors.join(',')
+            })
+        }
+
+        return next()
+
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            success: false,
+            msg : "Internal Server Error"
+        })
+    }
+}

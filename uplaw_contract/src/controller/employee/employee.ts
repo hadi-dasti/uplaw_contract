@@ -251,27 +251,21 @@ export const getOeEmployee = async (req: Request<{id:string}>, res: Response) =>
 
 
 
-//forget mobileNumber
-export const employeeForgetNumberMobile = async(req:Request,res:Response) => {
-  const {nationalCode,password} = req.body
+//forget password employee 
+export const employeeForgetPassword = async (req: Request, res: Response) => {
+  
+  const {nationalCode} = req.body
   try {
+
     // get nationalCode employee as database
-    const getEmployee: IUser | null = await User.findOne({nationalCode})
+    const getEmployee: IUser | null = await User.findOne({nationalCode })
+    
     if (!getEmployee) {
       return res.status(400).json({
         success: false,
         msg : 'Error Not Found nationalCode employee of database'
       })
     }
-
-    // match password employee
-    // const isMatchPassword = await getEmployee.isComparePassword(password)
-    // if (!isMatchPassword) {
-    //   return res.status(400).json({
-    //     success: false,
-    //     msg :'password is not match '
-    //   })
-    // }
 
     // create lastFourNumber as mobileNumber Employee
     const lastFourNumber = getEmployee.numberMobile.slice(-4)
@@ -292,16 +286,15 @@ export const employeeForgetNumberMobile = async(req:Request,res:Response) => {
   }
 }
 // verify reset mobileNumber Employee
-export const verifyNumberMobileEmployee = async (req: Request<{id:string}>, res: Response) => {
+export const resetPasswordEmployee = async (req: Request<{id:string}>, res: Response) => {
   const {lastFourDigits, employeeId } = req.body
   try {
 
     const getEmployee: IUser | null = await User.findById({ _id: employeeId })
-    // search notionalCode employee of database
     if (!getEmployee) {
       return res.status(400).json({
         success: false,
-        msg:"Not Found NationalCode Employee"
+        msg:"Not Found  Employee"
       })
     }
 
