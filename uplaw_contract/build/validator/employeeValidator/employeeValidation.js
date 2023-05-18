@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateVerifyEmployee = exports.validateLoginEmployee = exports.validateRegisterEmployee = void 0;
+exports.validateResetPasswordEmployee = exports.validateForgetPasswordEmployee = exports.validateVerifyEmployee = exports.validateLoginEmployee = exports.validateRegisterEmployee = void 0;
 const joi_1 = __importDefault(require("joi"));
 // Define validate gender
 var Gender;
@@ -26,7 +26,7 @@ const validateRegisterEmployee = (req, res, next) => {
             'string.max': 'Last name cannot be longer than {{#limit}} characters',
             'any.required': 'Last name is required'
         }),
-        password: joi_1.default.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).messages({
+        password: joi_1.default.string().pattern(new RegExp('^[a-zA-Z0-9]{6,30}$')).messages({
             'string.pattern.base': 'Password must be between 3 and 30 characters and contain only alpha-numeric characters'
         }),
         address: joi_1.default.string().min(10).trim().required().messages({
@@ -92,18 +92,11 @@ exports.validateRegisterEmployee = validateRegisterEmployee;
 const validateLoginEmployee = (req, res, next) => {
     //req.body of login employee
     const employeeSchemaLogin = joi_1.default.object({
-        firstName: joi_1.default.string().alphanum().min(3).max(10).required().messages({
-            'string.alphanum': 'First name must only contain alpha-numeric characters',
-            'string.min': 'First name must be at least {{#limit}} characters long',
-            'string.max': 'First name cannot be longer than {{#limit}} characters',
-            'any.required': 'First name is required'
+        email: joi_1.default.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({
+            'string.email': 'Please provide a valid email address',
+            'any.required': 'Email is required'
         }),
-        lastName: joi_1.default.string().trim().min(2).max(20).required().messages({
-            'string.min': 'Last name must be at least {{#limit}} characters long',
-            'string.max': 'Last name cannot be longer than {{#limit}} characters',
-            'any.required': 'Last name is required'
-        }),
-        password: joi_1.default.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).messages({
+        password: joi_1.default.string().pattern(new RegExp('^[a-zA-Z0-9]{6,30}$')).messages({
             'string.pattern.base': 'Password must be between 3 and 30 characters and contain only alpha-numeric characters'
         }),
     });
@@ -160,3 +153,71 @@ const validateVerifyEmployee = (req, res, next) => {
     }
 };
 exports.validateVerifyEmployee = validateVerifyEmployee;
+// Define the joi Schema for validation request body of forget password employee
+const validateForgetPasswordEmployee = (req, res, next) => {
+    // request body of forget password
+    const employeeForgetSchema = joi_1.default.object({
+        nationalCode: joi_1.default.string().pattern(/^[0-9]{10}$/).required().messages({
+            'string.pattern.base': 'National code must be exactly 10 digits',
+            'any.required': 'National code is required'
+        }),
+    });
+    //handling error 
+    try {
+        const { error } = employeeForgetSchema.validate(req.body, { abortEarly: true });
+        if (error) {
+            const errors = error.details.map(detail => detail.message);
+            return res.status(400).json({
+                success: false,
+                msg: errors.join(',')
+            });
+        }
+        return next();
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            msg: 'Internal Server Error'
+        });
+    }
+};
+exports.validateForgetPasswordEmployee = validateForgetPasswordEmployee;
+// Define validation for reset password of employee
+const validateResetPasswordEmployee = (req, res, next) => {
+    // request body  for reset Password
+    const validateSchemaEmployee = joi_1.default.object({
+        employeeId: joi_1.default.string().alphanum().length(24).required().messages({
+            'string.base': 'employeeId must be a string',
+            'string.alphaNum': 'employeeId must only contain alphanumeric characters',
+            'string.length': 'employeeId must be exactly 24 characters long',
+            'any.required': 'employeeId is required'
+        }),
+        lastFourDigits: joi_1.default.string().length(4).pattern(/^\d+$/).required().messages({
+            'string.base': 'Last four digits must be a string',
+            'string.length': 'Last four digits must be exactly 4 characters long',
+            'string.pattern.base': 'Last four digits must only contain numeric characters',
+            'any.required': 'Last four digits are required',
+        }),
+    });
+    // handle error for response
+    try {
+        const { error } = validateSchemaEmployee.validate(req.body, { abortEarly: true });
+        if (error) {
+            const errors = error.details.map(detail => detail.message);
+            return res.status(400).json({
+                success: false,
+                msg: errors.join(',')
+            });
+        }
+        return next();
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            msg: "Internal Server Error"
+        });
+    }
+};
+exports.validateResetPasswordEmployee = validateResetPasswordEmployee;

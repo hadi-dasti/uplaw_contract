@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyNumberMobileEmployee = exports.employeeForgetNumberMobile = exports.getOeEmployee = exports.getAllEmployee = exports.verifyLoginEmployee = exports.employeeLogin = exports.employeeRegistration = void 0;
+exports.resetPasswordEmployee = exports.employeeForgetPassword = exports.getOeEmployee = exports.getAllEmployee = exports.verifyLoginEmployee = exports.employeeLogin = exports.employeeRegistration = void 0;
 const User_1 = require("../../model/employee/User");
 const otp_1 = require("../../utile/otp");
 const sendEmail_1 = require("../../utile/sendEmail");
@@ -62,9 +62,9 @@ exports.employeeRegistration = employeeRegistration;
 //login employee
 const employeeLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { firstName, lastName, password } = req.body;
+        const { email, password } = req.body;
         // check numberMobile employee
-        const employees = yield User_1.User.findOne({ firstName, lastName });
+        const employees = yield User_1.User.findOne({ email });
         if (!employees) {
             return res.status(404).json({
                 success: false,
@@ -222,9 +222,9 @@ const getOeEmployee = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.getOeEmployee = getOeEmployee;
-//forget mobileNumber
-const employeeForgetNumberMobile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { nationalCode, password } = req.body;
+//forget password employee 
+const employeeForgetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { nationalCode } = req.body;
     try {
         // get nationalCode employee as database
         const getEmployee = yield User_1.User.findOne({ nationalCode });
@@ -234,14 +234,6 @@ const employeeForgetNumberMobile = (req, res) => __awaiter(void 0, void 0, void 
                 msg: 'Error Not Found nationalCode employee of database'
             });
         }
-        // match password employee
-        // const isMatchPassword = await getEmployee.isComparePassword(password)
-        // if (!isMatchPassword) {
-        //   return res.status(400).json({
-        //     success: false,
-        //     msg :'password is not match '
-        //   })
-        // }
         // create lastFourNumber as mobileNumber Employee
         const lastFourNumber = getEmployee.numberMobile.slice(-4);
         // response mobileNumber for employee
@@ -259,17 +251,16 @@ const employeeForgetNumberMobile = (req, res) => __awaiter(void 0, void 0, void 
         });
     }
 });
-exports.employeeForgetNumberMobile = employeeForgetNumberMobile;
+exports.employeeForgetPassword = employeeForgetPassword;
 // verify reset mobileNumber Employee
-const verifyNumberMobileEmployee = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const resetPasswordEmployee = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { lastFourDigits, employeeId } = req.body;
     try {
         const getEmployee = yield User_1.User.findById({ _id: employeeId });
-        // search notionalCode employee of database
         if (!getEmployee) {
             return res.status(400).json({
                 success: false,
-                msg: "Not Found NationalCode Employee"
+                msg: "Not Found  Employee"
             });
         }
         // match last 4 numberMobile employee
@@ -302,4 +293,4 @@ const verifyNumberMobileEmployee = (req, res) => __awaiter(void 0, void 0, void 
         });
     }
 });
-exports.verifyNumberMobileEmployee = verifyNumberMobileEmployee;
+exports.resetPasswordEmployee = resetPasswordEmployee;

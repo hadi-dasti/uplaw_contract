@@ -17,7 +17,7 @@ router.post('/login', employeeValidation_1.validateLoginEmployee, employee_1.emp
 router.post('/verifyEmployeeLogin', employeeValidation_1.validateVerifyEmployee, employee_1.verifyLoginEmployee);
 router.get('/getAllEmployee', employee_1.getAllEmployee);
 router.get('/getOneEmployee/:id', employee_1.getOeEmployee);
-// create router for forget and reset mobileNumber employee of database
-router.post('/forgetNumberMobile', employee_1.employeeForgetNumberMobile);
-router.post('/verify_mobileNumber_employee', employee_1.verifyNumberMobileEmployee);
+// create router for forget and reset password  employee of database
+router.post('/forgetNumberMobile', employeeValidation_1.validateForgetPasswordEmployee, employee_1.employeeForgetPassword);
+router.post('/verify_mobileNumber_employee', employeeValidation_1.validateResetPasswordEmployee, employee_1.resetPasswordEmployee);
 exports.default = router;
