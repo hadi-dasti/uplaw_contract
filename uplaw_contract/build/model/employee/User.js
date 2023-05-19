@@ -64,7 +64,7 @@ exports.userSchema = new mongoose_1.Schema({
     nationalCode: { type: String, minlength: 9, unique: true, required: [true, 'please provide a nationalCode'] },
     numberMobile: { type: String, minlength: 11, required: [true, 'please provide a numberMobile'] },
     gender: { type: String, enum: ['MALE', 'FEMALE'], required: [true, 'please provide a gender'] },
-    isActive: { type: Boolean, required: [true, 'please provide a isActive'] },
+    isActive: { type: Boolean, default: true, required: [true, 'please provide a isActive'] },
     mobileOtp: { type: String, required: false },
     createAt: { type: Date, default: Date.now, required: [true, 'please provide a profileImage'] },
     profileImage: { type: String, required: [false, 'please provide a profileImage'] },
