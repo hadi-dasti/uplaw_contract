@@ -4,3 +4,4 @@ Starting a new project that includes a two-person team
 #typescript
 #react
 #express
+#pm2 add pm2 to project 
