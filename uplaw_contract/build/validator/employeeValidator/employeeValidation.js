@@ -55,7 +55,7 @@ const validateRegisterEmployee = (req, res, next) => {
             'any.only': 'Please provide a valid gender',
             'any.required': 'Gender is required',
         }),
-        isActive: joi_1.default.boolean().required().messages({
+        isActive: joi_1.default.boolean().optional().messages({
             'any.required': 'Please specify if the user is active or not'
         }),
         mobileOtp: joi_1.default.string().pattern(/^[0-9]{6}$/).optional().messages({
