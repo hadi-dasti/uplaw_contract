@@ -51,7 +51,7 @@ export const validateRegisterEmployee = (req: Request, res: Response, next: Next
             'any.only': 'Please provide a valid gender',
             'any.required': 'Gender is required',
         }),
-        isActive: Joi.boolean().required().messages({
+        isActive: Joi.boolean().optional().messages({
             'any.required': 'Please specify if the user is active or not'
         }),
         mobileOtp: Joi.string().pattern(/^[0-9]{6}$/).optional().messages({
