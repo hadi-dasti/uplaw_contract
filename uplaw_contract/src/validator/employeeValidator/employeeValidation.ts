@@ -29,7 +29,7 @@ export const validateRegisterEmployee = (req: Request, res: Response, next: Next
             'string.min': 'Address must be at least {{#limit}} characters long',
             'any.required': 'Address is required'
         }),
-        email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({
+        email: Joi.string().email().required().messages({
             'string.email': 'Please provide a valid email address',
             'any.required': 'Email is required'
         }),
@@ -151,6 +151,34 @@ export const validateVerifyEmployee = (req: Request, res: Response, next: NextFu
     }
 }
 
+// define the joi validation id for delete employee of application
+export const validateDeleteIDEmployee = (req:Request,res:Response, next:NextFunction) => {
+    const validateDeleteSchema = Joi.object({
+        id: Joi.string().length(24).required().messages({
+             'string.base': 'ID must be a string',
+             'string.length': 'ID must be exactly 24 characters long',
+             'any.required': 'ID is required'
+        })
+    })
+    try {
+        // handel Error id of request.params
+        const { error } = validateDeleteSchema.validate(req.params,{ abortEarly: false })
+        if (error) {
+            const errors = error.details.map(err => err.message)
+            return res.status(400).json({
+                success: false,
+                msg : errors.join(',')
+            })
+        }
+        return next()
+
+    } catch (err:any) {
+        return res.status(500).json({
+            success: false,
+            msg : "Internal Server Error"
+        })
+    }
+}
 // Define the joi Schema for validation request body of forget password employee
 export const validateForgetPasswordEmployee = (req:Request, res:Response, next:NextFunction) => {
     // request body of forget password

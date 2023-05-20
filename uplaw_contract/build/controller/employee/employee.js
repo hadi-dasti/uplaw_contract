@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.resetPasswordEmployee = exports.employeeForgetPassword = exports.getOeEmployee = exports.getAllEmployee = exports.verifyLoginEmployee = exports.employeeLogin = exports.employeeRegistration = void 0;
+exports.resetPasswordEmployee = exports.employeeForgetPassword = exports.deleteEmployee = exports.getOeEmployee = exports.getAllEmployee = exports.verifyLoginEmployee = exports.employeeLogin = exports.employeeRegistration = void 0;
 const User_1 = require("../../model/employee/User");
 const otp_1 = require("../../utile/otp");
 const sendEmail_1 = require("../../utile/sendEmail");
@@ -222,6 +222,30 @@ const getOeEmployee = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.getOeEmployee = getOeEmployee;
+// delete employee with id
+const deleteEmployee = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    try {
+        const getEmployee = yield User_1.User.findByIdAndDelete(id);
+        if (!getEmployee) {
+            return res.status(404).json({
+                success: false,
+                msg: 'Error Not Found'
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            msg: 'Employee Delete Successfully'
+        });
+    }
+    catch (err) {
+        return res.status(500).json({
+            success: false,
+            msg: ['Internal Server Error', err.message]
+        });
+    }
+});
+exports.deleteEmployee = deleteEmployee;
 //forget password employee 
 const employeeForgetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { nationalCode } = req.body;

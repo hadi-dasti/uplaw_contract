@@ -248,7 +248,31 @@ export const getOeEmployee = async (req: Request<{id:string}>, res: Response) =>
   }
 }
 
+// delete employee with id
+export const deleteEmployee = async (req: Request<{ id: string }>, res: Response) => {
+  const id = req.params.id
+  try {
+    
+    const getEmployee = await User.findByIdAndDelete(id)
+    if (!getEmployee) {
+      return res.status(404).json({
+        success : false,
+        msg : 'Error Not Found'
+      })
+    }
 
+    return res.status(200).json({
+      success : true,
+      msg : 'Employee Delete Successfully'
+    })
+
+  } catch (err: any) {
+    return res.status(500).json({
+      success : false,
+      msg : ['Internal Server Error', err.message]
+    })
+  }
+}
 
 
 //forget password employee 

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateResetPasswordEmployee = exports.validateForgetPasswordEmployee = exports.validateVerifyEmployee = exports.validateLoginEmployee = exports.validateRegisterEmployee = void 0;
+exports.validateResetPasswordEmployee = exports.validateForgetPasswordEmployee = exports.validateDeleteIDEmployee = exports.validateVerifyEmployee = exports.validateLoginEmployee = exports.validateRegisterEmployee = void 0;
 const joi_1 = __importDefault(require("joi"));
 // Define validate gender
 var Gender;
@@ -33,7 +33,7 @@ const validateRegisterEmployee = (req, res, next) => {
             'string.min': 'Address must be at least {{#limit}} characters long',
             'any.required': 'Address is required'
         }),
-        email: joi_1.default.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({
+        email: joi_1.default.string().email().required().messages({
             'string.email': 'Please provide a valid email address',
             'any.required': 'Email is required'
         }),
@@ -153,6 +153,35 @@ const validateVerifyEmployee = (req, res, next) => {
     }
 };
 exports.validateVerifyEmployee = validateVerifyEmployee;
+// define the joi validation id for delete employee of application
+const validateDeleteIDEmployee = (req, res, next) => {
+    const validateDeleteSchema = joi_1.default.object({
+        id: joi_1.default.string().length(24).required().messages({
+            'string.base': 'ID must be a string',
+            'string.length': 'ID must be exactly 24 characters long',
+            'any.required': 'ID is required'
+        })
+    });
+    try {
+        // handel Error id of request.params
+        const { error } = validateDeleteSchema.validate(req.params, { abortEarly: false });
+        if (error) {
+            const errors = error.details.map(err => err.message);
+            return res.status(400).json({
+                success: false,
+                msg: errors.join(',')
+            });
+        }
+        return next();
+    }
+    catch (err) {
+        return res.status(500).json({
+            success: false,
+            msg: "Internal Server Error"
+        });
+    }
+};
+exports.validateDeleteIDEmployee = validateDeleteIDEmployee;
 // Define the joi Schema for validation request body of forget password employee
 const validateForgetPasswordEmployee = (req, res, next) => {
     // request body of forget password
