@@ -79,6 +79,7 @@ exports.userSchema.pre('save', function (next) {
         if (!user.isModified('password')) {
             return next();
         }
+        ;
         // hash password
         const salt = yield bcrypt.genSalt(10);
         user.password = yield bcrypt.hash(user.password, salt);
@@ -91,7 +92,7 @@ exports.userSchema.methods.isComparePassword = function (password) {
         return yield bcrypt.compare(password, this.password);
     });
 };
-// create toke 
+// create token for employee
 exports.userSchema.methods.generateAuthEmployeeToken = function () {
     const token = jsonwebtoken_1.default.sign({ employeeId: this._id }, exports.JWT_SECRETE, { expiresIn: '24h' });
     return token;

@@ -8,11 +8,11 @@ import {sendRegistrationEmail}from '../../utile/sendEmail'
 //register employee
 export const employeeRegistration = async (req: Request, res: Response) => {
   
-   // upload filename photo
-    const file = req.file;
+  // upload filename photo
+  const file = req.file;
     
   try {
-            // create field of req.body for push in document
+    // create field of req.body for push in document
     const {
       firstName,
       lastName,
@@ -28,46 +28,46 @@ export const employeeRegistration = async (req: Request, res: Response) => {
       profileImage
     } = req.body;
 
-          // create document and  save to document
-        const employeeData:IUser = await User.create({
-             firstName,
-             lastName,
-             password,
-             address,
-             email,
-             age,
-             nationalCode,
-             numberMobile,
-             gender,
-             isActive,
-             createAt,
-             profileImage
-        })
-          // check request body
-                  if (!employeeData) {
-                    return res.status(404).json({
-                          success: false,
-                          msg : 'Not Found Error'
-                       })
-                  }
+    // create document and  save to document
+    const employeeData: IUser = await User.create({
+      firstName,
+      lastName,
+      password,
+      address,
+      email,
+      age,
+      nationalCode,
+      numberMobile,
+      gender,
+      isActive,
+      createAt,
+      profileImage
+    });
+    // check request body
+    if (!employeeData) {
+      return res.status(404).json({
+        success: false,
+        msg: 'Not Found Error'
+      })
+    };
             
-             // send email to employee for register successfully
-    await sendRegistrationEmail(employeeData.email, employeeData.firstName)
+    // send email to employee for register successfully
+    await sendRegistrationEmail(employeeData.email, employeeData.firstName);
     
-            // response data from employee
-                    return res.status(201).json({
-                       success: true,
-                       data: {createDataEmployee : employeeData._id},
-                       msg : 'successfully create document user on database'
-                   })
+    // response data from employee
+    return res.status(201).json({
+      success: true,
+      data: { createDataEmployee: employeeData._id },
+      msg: 'successfully create document user on database'
+    });
                   
-    } catch (error:any) {
-                    return res.status(500).json({
-                      success: false,
-                      msg : ['Internal Server Error', error.message]
-                  })
-    }
-}
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      msg: ['Internal Server Error', error.message]
+    });
+  }
+};
 
 //login employee
 export const employeeLogin = async(req:Request,res:Response) => {

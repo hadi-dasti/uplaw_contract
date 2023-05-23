@@ -42,6 +42,7 @@ const employeeRegistration = (req, res) => __awaiter(void 0, void 0, void 0, fun
                 msg: 'Not Found Error'
             });
         }
+        ;
         // send email to employee for register successfully
         yield (0, sendEmail_1.sendRegistrationEmail)(employeeData.email, employeeData.firstName);
         // response data from employee

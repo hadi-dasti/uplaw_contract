@@ -27,7 +27,7 @@ const validateRegisterEmployee = (req, res, next) => {
             'any.required': 'Last name is required'
         }),
         password: joi_1.default.string().pattern(new RegExp('^[a-zA-Z0-9]{6,30}$')).messages({
-            'string.pattern.base': 'Password must be between 3 and 30 characters and contain only alpha-numeric characters'
+            'string.pattern.base': 'Password must be between 8 and 30 characters and contain only alpha-numeric characters'
         }),
         address: joi_1.default.string().min(10).trim().required().messages({
             'string.min': 'Address must be at least {{#limit}} characters long',
@@ -83,7 +83,7 @@ const validateRegisterEmployee = (req, res, next) => {
     catch (err) {
         return res.status(500).json({
             success: false,
-            msg: ['Internal Server Error', err.name]
+            msg: 'Internal Server Error' + err.message
         });
     }
 };
