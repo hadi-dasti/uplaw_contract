@@ -8,6 +8,7 @@ const express = require('express');
 const path_1 = require("path");
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const helmet_1 = __importDefault(require("helmet"));
 //setup mongodb
 const mongo_1 = __importDefault(require("./config/mongo"));
 (0, mongo_1.default)();
@@ -19,6 +20,7 @@ exports.PORT = process.env.PORT;
 //setup Express
 exports.app = express();
 // middleware
+exports.app.use((0, helmet_1.default)());
 exports.app.use(express.json());
 exports.app.use(express.urlencoded({ extended: true }));
 exports.app.use((0, cors_1.default)());
