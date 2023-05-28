@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = exports.userSchema = exports.JWT_SECRETE = void 0;
+exports.User = exports.userSchema = exports.JWT_EXPIRATION_TIME = exports.JWT_SECRETE = void 0;
 const mongoose_1 = require("mongoose");
 const path_1 = require("path");
 const dotenv_1 = __importDefault(require("dotenv"));
@@ -44,6 +44,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 // setup join path as dotenv
 dotenv_1.default.config({ path: (0, path_1.join)(__dirname, '../../../../uplaw_contract/.env') });
 exports.JWT_SECRETE = process.env.JWT_SECRETE;
+exports.JWT_EXPIRATION_TIME = process.env.JWT_EXPIRATION_TIME;
 // Create a Schema corresponding to the document interface
 exports.userSchema = new mongoose_1.Schema({
     firstName: { type: String, required: [true, 'please provide a firstName'] },
@@ -94,7 +95,7 @@ exports.userSchema.methods.isComparePassword = function (password) {
 };
 // create token for employee
 exports.userSchema.methods.generateAuthEmployeeToken = function () {
-    const token = jsonwebtoken_1.default.sign({ employeeId: this._id }, exports.JWT_SECRETE, { expiresIn: '24h' });
+    const token = jsonwebtoken_1.default.sign({ employeeId: this._id }, exports.JWT_SECRETE, { expiresIn: exports.JWT_EXPIRATION_TIME });
     return token;
 };
 //  Create a Model.

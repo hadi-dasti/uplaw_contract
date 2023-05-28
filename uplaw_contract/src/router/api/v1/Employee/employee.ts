@@ -1,5 +1,8 @@
 import { Router } from 'express'
-const router: Router = Router()
+const router: Router = Router();
+
+// Authorization for employee
+import { authEmployee } from '../../../../middleware/authEmployee/authEmployee'
 
 //import employee controller 
  import {employeeRegistration,employeeLogin,verifyLoginEmployee,getAllEmployee,getOeEmployee,employeeForgetPassword,resetPasswordEmployee,deleteEmployee} from '../../../../controller/employee/employee'
@@ -15,8 +18,8 @@ import { validateRegisterEmployee, validateLoginEmployee, validateVerifyEmployee
 router.post('/register', uploadImage.single('profileImage'), validateRegisterEmployee, employeeRegistration)
 router.post('/login',validateLoginEmployee , employeeLogin)
 router.post('/verifyEmployeeLogin',validateVerifyEmployee,verifyLoginEmployee)
-router.get('/getAllEmployee', getAllEmployee)
-router.get('/getOneEmployee/:id', getOeEmployee)
+router.get('/getAllEmployee',authEmployee,getAllEmployee)
+router.get('/getOneEmployee/:id',authEmployee, getOeEmployee)
 router.delete('/deleteEmployee/:id',validateDeleteIDEmployee,deleteEmployee)
 
 // create router for forget and reset password  employee of database

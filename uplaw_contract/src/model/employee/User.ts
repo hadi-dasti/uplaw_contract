@@ -1,11 +1,14 @@
-import { Schema, model, Document, Model } from 'mongoose'
-import {join} from 'path'
-import dotenv from 'dotenv'
-import * as bcrypt from 'bcryptjs'
+import { Schema, model, Document, Model } from 'mongoose';
+import { join } from 'path';
+import dotenv from 'dotenv';
+import * as bcrypt from 'bcryptjs';
 import jwt, { Secret } from 'jsonwebtoken';
+
 // setup join path as dotenv
 dotenv.config({ path: join(__dirname, '../../../../uplaw_contract/.env') });
 export const JWT_SECRETE = process.env.JWT_SECRETE;
+export const JWT_EXPIRATION_TIME = process.env.JWT_EXPIRATION_TIME;
+
 
 // Create an interface representing a document in MongoDB.
 export interface IUser extends Document{
@@ -79,8 +82,8 @@ userSchema.methods.isComparePassword = async function (password: string) {
 userSchema.methods.generateAuthEmployeeToken = function () {
     const token = jwt.sign({ employeeId: this._id },
         JWT_SECRETE as Secret,
-        { expiresIn: '24h' });
-    return token;
+        { expiresIn:JWT_EXPIRATION_TIME});
+    return token; 
 };
 
 //  Create a Model.
