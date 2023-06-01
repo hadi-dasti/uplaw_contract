@@ -7,10 +7,11 @@ exports.authEmployee = exports.JWT_SECRETE = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const path_1 = require("path");
 const dotenv_1 = __importDefault(require("dotenv"));
-// setup join path as dotenv
+// setup join path as dotenv of JWT_SECRETE
 dotenv_1.default.config({ path: (0, path_1.join)(__dirname, '../../../../uplaw_contract/.env') });
 exports.JWT_SECRETE = process.env.JWT_SECRETE;
 ;
+// setup middleware function for authorization employee
 const authEmployee = (req, res, next) => {
     var _a;
     try {
@@ -18,7 +19,7 @@ const authEmployee = (req, res, next) => {
         if (!token) {
             return res.status(401).json({
                 success: false,
-                msg: "Not authorized to access this resource_part1"
+                msg: "Not authorized to access this resource"
             });
         }
         const decoded = jsonwebtoken_1.default.verify(token, exports.JWT_SECRETE);

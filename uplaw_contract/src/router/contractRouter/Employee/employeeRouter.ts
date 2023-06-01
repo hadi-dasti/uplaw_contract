@@ -1,18 +1,18 @@
-import { Router } from 'express'
+import { Router} from 'express'
 const router: Router = Router();
 
 // Authorization for employee
-import { authEmployee } from '../../../../middleware/authEmployee/authEmployee'
+import { authEmployee } from '../../../middleware/authEmployee/authEmployee'
 
 //import employee controller 
- import {employeeRegistration,employeeLogin,verifyLoginEmployee,getAllEmployee,getOeEmployee,employeeForgetPassword,resetPasswordEmployee,deleteEmployee} from '../../../../controller/employee/employee'
+ import {employeeRegistration,employeeLogin,verifyLoginEmployee,getAllEmployee,getOeEmployee,employeeForgetPassword,resetPasswordEmployee,deleteEmployee} from '../../../controller/employee/employee'
 
 // middleware for upload image employee
-import uploadImage from '../../../../middleware/upload/uploadImage';
+import uploadImage from '../../../middleware/upload/uploadImage';
 
 // validation employee
 import { validateRegisterEmployee, validateLoginEmployee, validateVerifyEmployee, validateForgetPasswordEmployee, validateResetPasswordEmployee, validateDeleteIDEmployee }
-    from '../../../../validator/employeeValidator/employeeValidation';
+    from '../../../validator/employeeValidator/employeeValidation';
 
 //create router employee 
 router.post('/register', uploadImage.single('profileImage'), validateRegisterEmployee, employeeRegistration)

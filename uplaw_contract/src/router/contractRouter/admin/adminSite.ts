@@ -2,10 +2,10 @@ import { Router } from 'express';
 const router: Router = Router();
 
 // import controller 
-import { registerAdmin, getAdmin,updateAdmin,deleteAdmin } from '../../../../controller/admin/adminSiteController';
+import { registerAdmin, getAdmin,updateAdmin,deleteAdmin } from '../../../controller/admin/adminSiteController';
 
 // import validation admin
-import { adminValidation,adminUpdateValidation,validationAdminId } from '../../../../validator/adminValidation/adminValidator';
+import { adminValidation,adminUpdateValidation,validationAdminId } from '../../../validator/adminValidation/adminValidator';
 
 
 

@@ -9,7 +9,7 @@ import  db  from './config/mongo'
 db()
 
 // main router app
-import mainRouter from './router/mainRouter'
+import mainRouter from './router/mainContractRouter'
 
 
 // setup  environment variable
@@ -32,7 +32,7 @@ app.use(cors())
 app.use('/image',express.static(join(__dirname,'image')))
 
 // main router
-app.use(mainRouter)
+app.use('/api/v1',mainRouter)
 
 // SETUP Application
 app.listen(PORT, ()=> {

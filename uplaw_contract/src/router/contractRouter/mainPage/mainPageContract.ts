@@ -2,10 +2,10 @@ import { Router } from 'express';
 const router: Router = Router();
 
 //import controller of mainPage
-import { viewContractPage} from '../../../../controller/mainPage/mainPage'
+import { viewContractPageController } from '../../../controller/mainPage/mainPageContractController';
 
 // create mainPage Router
-router.get('/viewContract',viewContractPage)
+router.get('/',viewContractPageController)
 
 
 
