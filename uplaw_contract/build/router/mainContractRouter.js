@@ -14,4 +14,7 @@ router.use('/contract/employee', employeeRouter_1.default);
 // Implementation of contract admin routers for version_1
 const adminSite_1 = __importDefault(require("./contractRouter/admin/adminSite"));
 router.use('/contract/admin', adminSite_1.default);
+// Implementation of contracts routers for version_1
+const contractRouter_1_1 = __importDefault(require("./contractRouter/contract/contractRouter_1"));
+router.use('/contract/contract_1', contractRouter_1_1.default);
 exports.default = router;

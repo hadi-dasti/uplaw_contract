@@ -14,6 +14,10 @@ const router: Router = Router()
     import contractAdmin from './contractRouter/admin/adminSite';
     router.use('/contract/admin', contractAdmin);
 
+    // Implementation of contracts routers for version_1
+    import contractModel from './contractRouter/contract/contractRouter_1';
+    router.use('/contract/contract_1', contractModel);
+
 
     
 

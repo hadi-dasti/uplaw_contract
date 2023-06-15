@@ -1,7 +1,7 @@
 import multer from 'multer';
 import path from 'path';
 
-// Set up Multer storage engine
+// Setup Multer storage engine
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
         callback(null, path.join(process.cwd(), './image'))
