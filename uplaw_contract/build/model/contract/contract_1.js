@@ -2,6 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Contract_1 = exports.contractSchema = exports.paragraphSchema = exports.clauseParagraphSchema = void 0;
 const mongoose_1 = require("mongoose");
+;
+;
+;
 //build schema embedded of clause in paragraph
 exports.clauseParagraphSchema = new mongoose_1.Schema({
     key: { type: String, required: true },

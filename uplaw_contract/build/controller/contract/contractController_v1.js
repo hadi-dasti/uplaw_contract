@@ -14,6 +14,7 @@ const contract_1_1 = require("../../model/contract/contract_1");
 const mongoose_1 = require("mongoose");
 // build contract_1
 const createContract_1 = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // request body of  model contract_1
     const { title, description, typeContract, price, paragraphs, } = req.body;
     try {
         const createContract = yield contract_1_1.Contract_1.create({

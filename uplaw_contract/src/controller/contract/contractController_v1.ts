@@ -6,7 +6,7 @@ import { Types } from 'mongoose';
 
 // build contract_1
 export const createContract_1 = async (req: Request, res: Response) => {
-    
+    // request body of  model contract_1
     const { title,
         description,
         typeContract,
@@ -28,13 +28,13 @@ export const createContract_1 = async (req: Request, res: Response) => {
                     value: clauseData.value,
                     type: clauseData.type
                 }))
-            }))     
+            }))
         });
 
         if (!createContract) {
             return res.status(404).json({
                 success: false,
-                msg : "Not create Contract of model"
+                msg: "Not create Contract of model"
             })
         };
         
@@ -47,10 +47,10 @@ export const createContract_1 = async (req: Request, res: Response) => {
     } catch (err: any) {
         return res.status(500).json({
             success: false,
-            msg :"Internal Server Error " +  " " + err.message
-        }) 
+            msg: "Internal Server Error " + " " + err.message
+        })
     };
-} 
+}
 
 // read contract-1 of model 
 export const readContract_1 = async (req: Request, res: Response) => {
@@ -100,8 +100,8 @@ export const readContract_1 = async (req: Request, res: Response) => {
         return res.status(200).json({
             success: true,
             data: readContract,
-            msg : "Successfully read Contract_1"
-        })
+            msg: "Successfully read Contract_1"
+        });
 
 }catch (err: any) {
         return res.status(500).json({

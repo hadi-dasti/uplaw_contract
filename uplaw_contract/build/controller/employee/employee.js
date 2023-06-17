@@ -173,6 +173,7 @@ const getAllEmployee = (req, res) => __awaiter(void 0, void 0, void 0, function*
                 msg: 'Error Not Found'
             });
         }
+        ;
         return res.status(200).json({
             success: true,
             data: AllEmployee,
@@ -207,6 +208,7 @@ const getOeEmployee = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 msg: "Error Not Found Id Employee of database"
             });
         }
+        ;
         //response data of database
         return res.status(200).json({
             success: true,

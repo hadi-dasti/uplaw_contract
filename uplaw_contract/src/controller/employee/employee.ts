@@ -76,7 +76,7 @@ export const employeeLogin = async(req:Request,res:Response) => {
     const { email, password } = req.body
     
     // check numberMobile employee
-    const employees = await User.findOne({email})
+    const employees = await User.findOne({ email });
     if (!employees) {
       return res.status(404).json({
         success: false,
@@ -118,11 +118,11 @@ export const employeeLogin = async(req:Request,res:Response) => {
 
 //verify login employee with otp 
 export const verifyLoginEmployee = async (req: Request, res: Response) => {
-    const { otp, employeeId } = req.body
+  const { otp, employeeId } = req.body;
   try {  
     
      //check find employee with id of database
-    const employee = await User.findById({_id:employeeId})
+    const employee = await User.findById({ _id: employeeId });
     if (!employee) {
       return res.status(404).json({
         success: false,
@@ -131,9 +131,9 @@ export const verifyLoginEmployee = async (req: Request, res: Response) => {
     }
 
     // build time  for verify and login employee
-    const now = new Date()
-    const timeDiff = now.getTime() - employee.verificationCodeSentAt.getTime()
-    const minutesDiff = Math.floor(timeDiff / 60000)
+    const now = new Date();
+    const timeDiff = now.getTime() - employee.verificationCodeSentAt.getTime();
+    const minutesDiff = Math.floor(timeDiff / 60000);
     const time: number = 5 * 60 * 1000;
 
     // check and match time 
@@ -176,31 +176,32 @@ export const verifyLoginEmployee = async (req: Request, res: Response) => {
     })
   }
 }
+
 // get All Employee 
 export const getAllEmployee = async (req: Request, res: Response) => {
   
   try{
     const AllEmployee = await User.find({}, {
-    isActive: 0,
-    createdAt:0,  
-    updatedAt: 0,
-    __v: 0,
-    verificationCodeSentAt: 0,
-    mobileOtp:0
-    })
+      isActive: 0,
+      createdAt: 0,
+      updatedAt: 0,
+      __v: 0,
+      verificationCodeSentAt: 0,
+      mobileOtp: 0
+    });
 
     if (!AllEmployee) {
       return res.status(404).json({
         success: false,
-        msg : 'Error Not Found'
-      })
-    }
+        msg: 'Error Not Found'
+      });
+    };
 
     return res.status(200).json({
       success: true,
-      data: AllEmployee ,
-      msg : "successfully get all data of employee document"
-    })
+      data: AllEmployee,
+      msg: "successfully get all data of employee document"
+    });
 
   }catch(err){
     console.log(err)
@@ -213,31 +214,31 @@ export const getAllEmployee = async (req: Request, res: Response) => {
 
 // get one Employee of database 
 export const getOeEmployee = async (req: Request<{id:string}>, res: Response) => {
-      const id = req.params.id
+  const id = req.params.id;
   try { 
-    const getEmployeeId : IUser | null = await User.findById({ _id: id }, {
-       isActive: 0,
-       createdAt:0,  
-       updatedAt: 0,
-       __v: 0,
-       verificationCodeSentAt: 0,
-       mobileOtp:0
-    })
+    const getEmployeeId: IUser | null = await User.findById({ _id: id }, {
+      isActive: 0,
+      createdAt: 0,
+      updatedAt: 0,
+      __v: 0,
+      verificationCodeSentAt: 0,
+      mobileOtp: 0
+    });
 
     // Error not found
     if (!getEmployeeId) {
       return res.status(404).json({
         success: false,
-        msg :"Error Not Found Id Employee of database"
-      })
-    }
+        msg: "Error Not Found Id Employee of database"
+      });
+    };
 
     //response data of database
     return res.status(200).json({
       success: true,
-      data: getEmployeeId ,
-      msg :"Successfully get One Employee with Id"
-    })
+      data: getEmployeeId,
+      msg: "Successfully get One Employee with Id"
+    });
 
   } catch (err) {
     console.log(err)
@@ -250,71 +251,72 @@ export const getOeEmployee = async (req: Request<{id:string}>, res: Response) =>
 
 // delete employee with id
 export const deleteEmployee = async (req: Request<{ id: string }>, res: Response) => {
-  const id = req.params.id
+  const id = req.params.id;
   try {
     
-    const getEmployee = await User.findByIdAndDelete(id)
+    const getEmployee = await User.findByIdAndDelete(id);
     if (!getEmployee) {
       return res.status(404).json({
-        success : false,
-        msg : 'Error Not Found'
-      })
+        success: false,
+        msg: 'Error Not Found'
+      });
     }
 
     return res.status(200).json({
-      success : true,
-      msg : 'Employee Delete Successfully'
-    })
+      success: true,
+      msg: 'Employee Delete Successfully'
+    });
 
   } catch (err: any) {
     return res.status(500).json({
-      success : false,
-      msg : ['Internal Server Error', err.message]
+      success: false,
+      msg: ['Internal Server Error', err.message]
     })
   }
-}
+};
 
 
 //forget password employee 
 export const employeeForgetPassword = async (req: Request, res: Response) => {
   
-  const {nationalCode} = req.body
+  const { nationalCode } = req.body;
   try {
 
     // get nationalCode employee as database
-    const getEmployee: IUser | null = await User.findOne({nationalCode })
+    const getEmployee: IUser | null = await User.findOne({ nationalCode });
     
     if (!getEmployee) {
       return res.status(400).json({
         success: false,
-        msg : 'Error Not Found nationalCode employee of database'
-      })
+        msg: 'Error Not Found nationalCode employee of database'
+      });
     }
 
     // create lastFourNumber as mobileNumber Employee
-    const lastFourNumber = getEmployee.numberMobile.slice(-4)
+    const lastFourNumber = getEmployee.numberMobile.slice(-4);
 
     // response mobileNumber for employee
     return res.status(200).json({
       success: true,
       data: `mobileNumber:******${lastFourNumber}  ${"+"}  ${getEmployee._id} `,
-      msg:'successfully Get mobileNumber as database then show to employee'
-    })
+      msg: 'successfully Get mobileNumber as database then show to employee'
+    });
 
   } catch (err) {
     console.log(err)
     return res.status(500).json({
       success: false,
-      mag :'internal Server Error'
-    })
+      mag: 'internal Server Error'
+    });
   }
 }
 // verify reset mobileNumber Employee
 export const resetPasswordEmployee = async (req: Request<{id:string}>, res: Response) => {
-  const {lastFourDigits, employeeId } = req.body
+  const { lastFourDigits, employeeId } = req.body;
   try {
 
-    const getEmployee: IUser | null = await User.findById({ _id: employeeId })
+    const getEmployee: IUser | null = await User.findById({ _id: employeeId });
+
     if (!getEmployee) {
       return res.status(400).json({
         success: false,
@@ -326,8 +328,8 @@ export const resetPasswordEmployee = async (req: Request<{id:string}>, res: Resp
     if (getEmployee.numberMobile.slice(-4) !== lastFourDigits) {
       return res.status(400).json({
         success: false,
-        msg :'Not Match for lastFourDigits with numberMobile'
-      })
+        msg: 'Not Match for lastFourDigits with numberMobile'
+      });
     }
 
     // generate otp  for mobileNumber employee 
@@ -344,8 +346,8 @@ export const resetPasswordEmployee = async (req: Request<{id:string}>, res: Resp
         createOtp: otp,
         employee: getEmployee._id
       },
-      msg :'successfully verify mobileNumber  and send code otp for employee'
-    })
+      msg: 'successfully verify mobileNumber  and send code otp for employee'
+    });
 
   } catch (err) {
     console.log(err)

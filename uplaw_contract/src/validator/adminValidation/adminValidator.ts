@@ -1,5 +1,5 @@
-import {Request,Response,NextFunction } from 'express'
-import Joi from 'joi'
+import { Request, Response, NextFunction } from 'express';
+import Joi from 'joi';
 
 
 // define validation for request body of admin

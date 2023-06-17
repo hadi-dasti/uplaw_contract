@@ -1,5 +1,5 @@
-import { Request, Response, response} from 'express'
-import {Admin,IAdmin} from '../../model/Admin/AdminSite'
+import { Request, Response, response } from 'express';
+import { Admin, IAdmin } from '../../model/Admin/AdminSite';
 
 // register admin in site
 export const registerAdmin = async (req: Request, res: Response) => {
@@ -80,26 +80,27 @@ export const getAdmin = async (req: Request<{ id: string }>, res: Response) => {
                 _id: 1,
                 createdAt: 0,
                 updatedAt:0
-        });
+            });
+        
         // get error not found
         if (!getAdmin) {
             return res.status(404).json({
                 success: false,
-                msg :"Error Not Found"
-            })
+                msg: "Error Not Found"
+            });
         }
 
         return res.status(200).json({
             success: true,
             data: getAdmin._id,
-            msg :"successfully get admin with id of database"
-        })
+            msg: "successfully get admin with id of database"
+        });
 
     } catch (err: any) {
         return res.status(500).json({
             success: false,
-            msg :"Internal Server Error" +" "+ err.name
-        })
+            msg: "Internal Server Error" + " " + err.name
+        });
     }
 };
 
