@@ -1,7 +1,7 @@
-import { Request, Response} from 'express'
-import {User,IUser} from '../../model/employee/User'
-import { generateOtp } from '../../utile/otp'
-import {sendRegistrationEmail}from '../../utile/sendEmail'
+import { Request, Response } from 'express';
+import { Employee, IEmployee } from '../../model/Employee/Employee';
+import { generateOtp } from '../../utile/otp';
+import { sendRegistrationEmail } from '../../utile/sendEmail';
 
 
 
@@ -29,7 +29,7 @@ export const employeeRegistration = async (req: Request, res: Response) => {
     } = req.body;
 
     // create document and  save to document
-    const employeeData: IUser = await User.create({
+    const employeeData: IEmployee = await Employee.create({
       firstName,
       lastName,
       password,
@@ -70,33 +70,35 @@ export const employeeRegistration = async (req: Request, res: Response) => {
 };
 
 //login employee
-export const employeeLogin = async(req:Request,res:Response) => {
+export const employeeLogin = async (req: Request, res: Response) => {
   try {
     
-    const { email, password } = req.body
+    const { email, password } = req.body;
     
     // check numberMobile employee
-    const employees = await User.findOne({ email });
+    const employees = await Employee.findOne({ email });
+
     if (!employees) {
       return res.status(404).json({
         success: false,
-        msg : "Employee details were not found in the database"
-      })
-    }
+        msg: "Employee details were not found in the database"
+      });
+    };
 
     // match password employee  
-    const isMatchPassword = await employees.isComparePassword(password)
+    const isMatchPassword = await employees.isComparePassword(password);
+
     if (!isMatchPassword) {
       return res.status(400).json({
         success: false,
-        msg :'password is not match '
-      })
-    }
+        msg: 'password is not match '
+      });
+    };
 
     // generate otp employee
-    let otp = generateOtp(6)
-    employees.mobileOtp = otp
-    await employees.save()
+    let otp = generateOtp(6);
+    employees.mobileOtp = otp;
+    await employees.save();
     
     return res.status(200).json({
       success: true,
@@ -104,31 +106,32 @@ export const employeeLogin = async(req:Request,res:Response) => {
         createOtp: otp,
         employee: employees._id
       },
-      msg:'successfully send otp to mobileNumber employee'
-    })
+      msg: 'successfully send otp to mobileNumber employee'
+    });
 
   } catch (err) {
     console.log(err)
     return res.status(500).json({
       success: false,
-      msg:'Internal Server Error'
+      msg: 'Internal Server Error'
     })
   }
-}
+};
 
 //verify login employee with otp 
 export const verifyLoginEmployee = async (req: Request, res: Response) => {
   const { otp, employeeId } = req.body;
-  try {  
-    
-     //check find employee with id of database
-    const employee = await User.findById({ _id: employeeId });
+
+  try {
+    //check find employee with id of database
+    const employee = await Employee.findById({ _id: employeeId });
+
     if (!employee) {
       return res.status(404).json({
         success: false,
-        msg :'workerId not found'
-      })
-    }
+        msg: 'workerId not found'
+      });
+    };
 
     // build time  for verify and login employee
     const now = new Date();
@@ -137,18 +140,18 @@ export const verifyLoginEmployee = async (req: Request, res: Response) => {
     const time: number = 5 * 60 * 1000;
 
     // check and match time 
-    if( minutesDiff > time) {
+    if (minutesDiff > time) {
       return res.status(400).json({
-          success : false,
-          msg :'Verification code has expired' 
-      })
-    }
+        success: false,
+        msg: 'Verification code has expired'
+      });
+    };
 
     // match otp 
     if (employee.mobileOtp !== otp) {
       return res.status(400).json({
         success: false,
-        msg :'Invalid verification code'
+        msg: 'Invalid verification code'
       })
     }
 
@@ -156,32 +159,32 @@ export const verifyLoginEmployee = async (req: Request, res: Response) => {
     const getToken = employee.generateAuthEmployeeToken()
 
     // last update document of employee 
-    employee.mobileOtp =""
-    await employee.save()
+    employee.mobileOtp = ""
+    await employee.save();
 
     // send token and employeeId of document for login  employee in application 
     return res.status(200).json({
       success: true,
       data: {
         getToken,
-        employeeID : employee._id
+        employeeID: employee._id
       },
-      msg :"successfully login employee with mobileNumber "
-    })
+      msg: "successfully login employee with mobileNumber "
+    });
 
-  } catch (error:any) {
+  } catch (error: any) {
     return res.status(500).json({
       success: false,
-      msg : ['Internal Server Error', error.message]
-    })
-  }
-}
+      msg: ['Internal Server Error', error.message]
+    });
+  };
+};
 
 // get All Employee 
 export const getAllEmployee = async (req: Request, res: Response) => {
   
   try{
-    const AllEmployee = await User.find({}, {
+    const AllEmployee = await Employee.find({}, {
       isActive: 0,
       createdAt: 0,
       updatedAt: 0,
@@ -216,7 +219,7 @@ export const getAllEmployee = async (req: Request, res: Response) => {
 export const getOeEmployee = async (req: Request<{id:string}>, res: Response) => {
   const id = req.params.id;
   try { 
-    const getEmployeeId: IUser | null = await User.findById({ _id: id }, {
+    const getEmployeeId: IEmployee | null = await Employee.findById({ _id: id }, {
       isActive: 0,
       createdAt: 0,
       updatedAt: 0,
@@ -254,7 +257,7 @@ export const deleteEmployee = async (req: Request<{ id: string }>, res: Response
   const id = req.params.id;
   try {
     
-    const getEmployee = await User.findByIdAndDelete(id);
+    const getEmployee = await Employee.findByIdAndDelete(id);
     if (!getEmployee) {
       return res.status(404).json({
         success: false,
@@ -283,7 +286,7 @@ export const employeeForgetPassword = async (req: Request, res: Response) => {
   try {
 
     // get nationalCode employee as database
-    const getEmployee: IUser | null = await User.findOne({ nationalCode });
+    const getEmployee: IEmployee | null = await Employee.findOne({ nationalCode });
     
     if (!getEmployee) {
       return res.status(400).json({
@@ -315,7 +318,7 @@ export const resetPasswordEmployee = async (req: Request<{id:string}>, res: Resp
   const { lastFourDigits, employeeId } = req.body;
   try {
 
-    const getEmployee: IUser | null = await User.findById({ _id: employeeId });
+    const getEmployee: IEmployee | null = await Employee.findById({ _id: employeeId });
 
     if (!getEmployee) {
       return res.status(400).json({

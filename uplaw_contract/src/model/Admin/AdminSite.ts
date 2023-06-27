@@ -1,8 +1,9 @@
-import { Schema,model,Document } from "mongoose";
+import { Schema,model,Document,Types } from "mongoose";
 import * as bcrypt from 'bcryptjs';
 import { join } from 'path';
 import dotenv from 'dotenv';
 import jwt, { Secret } from 'jsonwebtoken';
+import { IAcceptContract } from '../AcceptContract/AcceptContractEmployee';
 
 // setup join path as dotenv
 dotenv.config({ path: join(__dirname, '../../../../uplaw_contract/.env') });
@@ -16,19 +17,21 @@ export interface IAdmin extends Document {
     password: string,
     position: string,
     mobileNumber: string,
+    acceptContract:Types.ObjectId | IAcceptContract,
     generateTokenAdmin : ()=> string
 }
 
 //2. Create a SchemaAdmin corresponding to the document interface IAdmin.
-const adminSchema = new Schema<IAdmin>({
+export const adminSchema = new Schema<IAdmin>({
     fullName: { type: String, minlength: (3), required: [true, 'please provide a fullName'] },
     email: { type: String, unique: true, required: [true, 'please provide an email'] },
     password: { type: String, unique: true, minlength: (8), required: [true, 'please provide a password'] },
     position: { type: String, required: [true, 'please provide a position'] },
-    mobileNumber:{type:String,unique :true,minlength:(11),required:[true,'please provide a mobileNumber']}
+    mobileNumber: { type: String, unique: true, minlength: (11), required: [true, 'please provide a mobileNumber'] },
+    acceptContract: { type: [Schema.Types.ObjectId], ref: 'AcceptContract' }
 }, {
-    timestamps:true
-})
+    timestamps: true
+});
 
 // create middleware pre for save password before change password
 adminSchema.pre<IAdmin>('save', async function (next) {

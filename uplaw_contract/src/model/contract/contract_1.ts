@@ -1,4 +1,6 @@
-import { model, Document, Schema } from "mongoose";
+import { model, Document, Schema, Types } from "mongoose";
+import { IAcceptContract } from '../AcceptContract/AcceptContractEmployee';
+
 
 // Create an interface representing clause in paragraph
 export interface IClause extends Document{
@@ -20,7 +22,8 @@ export interface IContract_1 extends Document{
     description: string,
     typeContract: string,
     price: string,
-    paragraphs:IParagraphs[]
+    paragraphs: IParagraphs[],
+    acceptedContract:Types.ObjectId | IAcceptContract
 };
 
 
@@ -44,7 +47,8 @@ export const contractSchema = new Schema<IContract_1>({
     description: { type: String, required: [true, 'please provide a description contract'] },
     typeContract: { type: String, required: [true, 'please provide a  typeContract '] },
     price: { type: String, required: [true, 'please provide a price contract'] },
-    paragraphs: { type: [paragraphSchema], default: [] }
+    paragraphs: { type: [paragraphSchema], default: [] },
+    acceptedContract: { type: [Schema.Types.ObjectId], ref: 'AcceptContract' }
 }, {
     timestamps: true
 });

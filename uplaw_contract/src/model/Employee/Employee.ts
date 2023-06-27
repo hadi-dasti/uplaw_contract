@@ -1,8 +1,11 @@
-import { Schema, model, Document, Model } from 'mongoose';
+import { Schema, model, Document, Model,Types} from 'mongoose';
 import { join } from 'path';
 import dotenv from 'dotenv';
 import * as bcrypt from 'bcryptjs';
 import jwt, { Secret } from 'jsonwebtoken';
+import { IAcceptContract } from '../AcceptContract/AcceptContractEmployee';
+
+
 
 // setup join path as dotenv
 dotenv.config({ path: join(__dirname, '../../../../uplaw_contract/.env') });
@@ -11,7 +14,7 @@ export const JWT_EXPIRATION_TIME = process.env.JWT_EXPIRATION_TIME;
 
 
 // Create an interface representing a document in MongoDB.
-export interface IUser extends Document{
+export interface IEmployee extends Document{
     firstName: string,
     lastName: string,
     password: string,
@@ -25,13 +28,14 @@ export interface IUser extends Document{
     mobileOtp: string,
     createAt: Date,
     verificationCodeSentAt: Date,
-    profileImage : string,
+    profileImage: string,
+    acceptedContract:Types.ObjectId | IAcceptContract,
     generateAuthEmployeeToken: () => string,
     isComparePassword:(password: string) => Promise<boolean>
 }
 
 // Create a Schema corresponding to the document interface
-export const userSchema = new Schema<IUser>({
+export const userSchema = new Schema<IEmployee>({
         firstName: { type: String, required: [true, 'please provide a firstName'] },
         lastName: { type: String, required: [true, 'please provide a lastName'] },
         password: { type: String, required: [true, 'please provide a password']},
@@ -54,14 +58,15 @@ export const userSchema = new Schema<IUser>({
         mobileOtp:{type : String, required:false},
         createAt: { type: Date, default: Date.now ,required:[true,'please provide a profileImage']},
         profileImage:{type:String ,required:[false,'please provide a profileImage']},
-        verificationCodeSentAt: { type: Date, default: Date.now, required: false }
+        verificationCodeSentAt: { type: Date, default: Date.now, required: false },
+        acceptedContract: { type: Schema.Types.ObjectId ,ref:'AcceptContract'},
     }, {
             timestamps:true
 });
 
 
 // Hash the user's password before saving to the database
-userSchema.pre<Model<IUser> & IUser>('save', async function (next) {
+userSchema.pre<Model<IEmployee> & IEmployee>('save', async function (next) {
   const user = this;
   if (!user.isModified('password')) {
     return next();
@@ -88,5 +93,5 @@ userSchema.methods.generateAuthEmployeeToken = function () {
 };
 
 //  Create a Model.
-export const User = model<IUser>('User', userSchema);
+export const Employee = model<IEmployee>('Employee', userSchema);
 

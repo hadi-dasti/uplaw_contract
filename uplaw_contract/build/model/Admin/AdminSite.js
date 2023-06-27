@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Admin = exports.JWT_SECRETE_ADMIN = void 0;
+exports.Admin = exports.adminSchema = exports.JWT_SECRETE_ADMIN = void 0;
 const mongoose_1 = require("mongoose");
 const bcrypt = __importStar(require("bcryptjs"));
 const path_1 = require("path");
@@ -45,17 +45,18 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 dotenv_1.default.config({ path: (0, path_1.join)(__dirname, '../../../../uplaw_contract/.env') });
 exports.JWT_SECRETE_ADMIN = process.env.JWT_SECRETE_ADMIN;
 //2. Create a SchemaAdmin corresponding to the document interface IAdmin.
-const adminSchema = new mongoose_1.Schema({
+exports.adminSchema = new mongoose_1.Schema({
     fullName: { type: String, minlength: (3), required: [true, 'please provide a fullName'] },
     email: { type: String, unique: true, required: [true, 'please provide an email'] },
     password: { type: String, unique: true, minlength: (8), required: [true, 'please provide a password'] },
     position: { type: String, required: [true, 'please provide a position'] },
-    mobileNumber: { type: String, unique: true, minlength: (11), required: [true, 'please provide a mobileNumber'] }
+    mobileNumber: { type: String, unique: true, minlength: (11), required: [true, 'please provide a mobileNumber'] },
+    acceptContract: { type: [mongoose_1.Schema.Types.ObjectId], ref: 'AcceptContract' }
 }, {
     timestamps: true
 });
 // create middleware pre for save password before change password
-adminSchema.pre('save', function (next) {
+exports.adminSchema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {
         const admin = this;
         if (!admin.isModified('password')) {
@@ -69,9 +70,9 @@ adminSchema.pre('save', function (next) {
     });
 });
 // create token for admin 
-adminSchema.methods.generateTokenAdmin = function () {
+exports.adminSchema.methods.generateTokenAdmin = function () {
     const token = jsonwebtoken_1.default.sign({ adminId: this._id.toString() }, exports.JWT_SECRETE_ADMIN, { expiresIn: '48h' });
     return token;
 };
 // 3. Create a Model of AdminSchema
-exports.Admin = (0, mongoose_1.model)('Admin', adminSchema);
+exports.Admin = (0, mongoose_1.model)('Admin', exports.adminSchema);

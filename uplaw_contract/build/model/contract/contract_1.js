@@ -23,7 +23,8 @@ exports.contractSchema = new mongoose_1.Schema({
     description: { type: String, required: [true, 'please provide a description contract'] },
     typeContract: { type: String, required: [true, 'please provide a  typeContract '] },
     price: { type: String, required: [true, 'please provide a price contract'] },
-    paragraphs: { type: [exports.paragraphSchema], default: [] }
+    paragraphs: { type: [exports.paragraphSchema], default: [] },
+    acceptedContract: { type: [mongoose_1.Schema.Types.ObjectId], ref: 'AcceptContract' }
 }, {
     timestamps: true
 });

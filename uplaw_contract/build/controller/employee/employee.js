@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resetPasswordEmployee = exports.employeeForgetPassword = exports.deleteEmployee = exports.getOeEmployee = exports.getAllEmployee = exports.verifyLoginEmployee = exports.employeeLogin = exports.employeeRegistration = void 0;
-const User_1 = require("../../model/employee/User");
+const Employee_1 = require("../../model/Employee/Employee");
 const otp_1 = require("../../utile/otp");
 const sendEmail_1 = require("../../utile/sendEmail");
 //register employee
@@ -21,7 +21,7 @@ const employeeRegistration = (req, res) => __awaiter(void 0, void 0, void 0, fun
         // create field of req.body for push in document
         const { firstName, lastName, password, address, email, age, nationalCode, numberMobile, gender, isActive, createAt, profileImage } = req.body;
         // create document and  save to document
-        const employeeData = yield User_1.User.create({
+        const employeeData = yield Employee_1.Employee.create({
             firstName,
             lastName,
             password,
@@ -65,13 +65,14 @@ const employeeLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const { email, password } = req.body;
         // check numberMobile employee
-        const employees = yield User_1.User.findOne({ email });
+        const employees = yield Employee_1.Employee.findOne({ email });
         if (!employees) {
             return res.status(404).json({
                 success: false,
                 msg: "Employee details were not found in the database"
             });
         }
+        ;
         // match password employee  
         const isMatchPassword = yield employees.isComparePassword(password);
         if (!isMatchPassword) {
@@ -80,6 +81,7 @@ const employeeLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 msg: 'password is not match '
             });
         }
+        ;
         // generate otp employee
         let otp = (0, otp_1.generateOtp)(6);
         employees.mobileOtp = otp;
@@ -107,13 +109,14 @@ const verifyLoginEmployee = (req, res) => __awaiter(void 0, void 0, void 0, func
     const { otp, employeeId } = req.body;
     try {
         //check find employee with id of database
-        const employee = yield User_1.User.findById({ _id: employeeId });
+        const employee = yield Employee_1.Employee.findById({ _id: employeeId });
         if (!employee) {
             return res.status(404).json({
                 success: false,
                 msg: 'workerId not found'
             });
         }
+        ;
         // build time  for verify and login employee
         const now = new Date();
         const timeDiff = now.getTime() - employee.verificationCodeSentAt.getTime();
@@ -126,6 +129,7 @@ const verifyLoginEmployee = (req, res) => __awaiter(void 0, void 0, void 0, func
                 msg: 'Verification code has expired'
             });
         }
+        ;
         // match otp 
         if (employee.mobileOtp !== otp) {
             return res.status(400).json({
@@ -154,12 +158,13 @@ const verifyLoginEmployee = (req, res) => __awaiter(void 0, void 0, void 0, func
             msg: ['Internal Server Error', error.message]
         });
     }
+    ;
 });
 exports.verifyLoginEmployee = verifyLoginEmployee;
 // get All Employee 
 const getAllEmployee = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const AllEmployee = yield User_1.User.find({}, {
+        const AllEmployee = yield Employee_1.Employee.find({}, {
             isActive: 0,
             createdAt: 0,
             updatedAt: 0,
@@ -193,7 +198,7 @@ exports.getAllEmployee = getAllEmployee;
 const getOeEmployee = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     try {
-        const getEmployeeId = yield User_1.User.findById({ _id: id }, {
+        const getEmployeeId = yield Employee_1.Employee.findById({ _id: id }, {
             isActive: 0,
             createdAt: 0,
             updatedAt: 0,
@@ -229,7 +234,7 @@ exports.getOeEmployee = getOeEmployee;
 const deleteEmployee = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     try {
-        const getEmployee = yield User_1.User.findByIdAndDelete(id);
+        const getEmployee = yield Employee_1.Employee.findByIdAndDelete(id);
         if (!getEmployee) {
             return res.status(404).json({
                 success: false,
@@ -254,7 +259,7 @@ const employeeForgetPassword = (req, res) => __awaiter(void 0, void 0, void 0, f
     const { nationalCode } = req.body;
     try {
         // get nationalCode employee as database
-        const getEmployee = yield User_1.User.findOne({ nationalCode });
+        const getEmployee = yield Employee_1.Employee.findOne({ nationalCode });
         if (!getEmployee) {
             return res.status(400).json({
                 success: false,
@@ -283,7 +288,7 @@ exports.employeeForgetPassword = employeeForgetPassword;
 const resetPasswordEmployee = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { lastFourDigits, employeeId } = req.body;
     try {
-        const getEmployee = yield User_1.User.findById({ _id: employeeId });
+        const getEmployee = yield Employee_1.Employee.findById({ _id: employeeId });
         if (!getEmployee) {
             return res.status(400).json({
                 success: false,
