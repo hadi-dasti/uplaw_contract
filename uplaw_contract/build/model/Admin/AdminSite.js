@@ -51,7 +51,7 @@ exports.adminSchema = new mongoose_1.Schema({
     password: { type: String, unique: true, minlength: (8), required: [true, 'please provide a password'] },
     position: { type: String, required: [true, 'please provide a position'] },
     mobileNumber: { type: String, unique: true, minlength: (11), required: [true, 'please provide a mobileNumber'] },
-    acceptContract: { type: [mongoose_1.Schema.Types.ObjectId], ref: 'AcceptContract' }
+    finalAcceptContract: { type: [mongoose_1.Schema.Types.ObjectId], ref: 'AcceptContract' }
 }, {
     timestamps: true
 });

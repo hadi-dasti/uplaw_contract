@@ -59,7 +59,7 @@ export const userSchema = new Schema<IEmployee>({
         createAt: { type: Date, default: Date.now ,required:[true,'please provide a profileImage']},
         profileImage:{type:String ,required:[false,'please provide a profileImage']},
         verificationCodeSentAt: { type: Date, default: Date.now, required: false },
-        acceptedContract: { type: Schema.Types.ObjectId ,ref:'AcceptContract'},
+        acceptedContract: [{ type: Schema.Types.ObjectId ,ref:'AcceptContract'}],
     }, {
             timestamps:true
 });

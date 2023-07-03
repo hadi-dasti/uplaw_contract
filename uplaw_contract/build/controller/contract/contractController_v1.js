@@ -56,9 +56,9 @@ const createContract_1 = (req, res) => __awaiter(void 0, void 0, void 0, functio
 exports.createContract_1 = createContract_1;
 // read contract-1 of model 
 const readContract_1 = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //req.params
+    const { contractId } = req.params;
     try {
-        //req.params
-        const contractId = req.params.contractId;
         // aggregation pipeline with nested Array 
         const readContract = yield contract_1_1.Contract_1.aggregate([
             {

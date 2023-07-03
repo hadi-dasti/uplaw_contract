@@ -48,7 +48,7 @@ export const contractSchema = new Schema<IContract_1>({
     typeContract: { type: String, required: [true, 'please provide a  typeContract '] },
     price: { type: String, required: [true, 'please provide a price contract'] },
     paragraphs: { type: [paragraphSchema], default: [] },
-    acceptedContract: { type: [Schema.Types.ObjectId], ref: 'AcceptContract' }
+    acceptedContract: { type: Schema.Types.ObjectId, ref: 'AcceptContract' }
 }, {
     timestamps: true
 });

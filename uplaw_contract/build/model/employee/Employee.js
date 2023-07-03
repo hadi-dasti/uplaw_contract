@@ -70,7 +70,7 @@ exports.userSchema = new mongoose_1.Schema({
     createAt: { type: Date, default: Date.now, required: [true, 'please provide a profileImage'] },
     profileImage: { type: String, required: [false, 'please provide a profileImage'] },
     verificationCodeSentAt: { type: Date, default: Date.now, required: false },
-    acceptedContract: { type: mongoose_1.Schema.Types.ObjectId, ref: 'AcceptContract' },
+    acceptedContract: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'AcceptContract' }],
 }, {
     timestamps: true
 });

@@ -26,6 +26,10 @@ exports.app.use(express.urlencoded({ extended: true }));
 exports.app.use((0, cors_1.default)());
 // path for uploadImage employee
 exports.app.use('/image', express.static((0, path_1.join)(__dirname, 'image')));
+// Set the view engine to EJS
+exports.app.set('view engine', 'ejs');
+// Set the views directory
+exports.app.set('views', (0, path_1.join)(__dirname, './views/contract.ejs'));
 // main router
 exports.app.use('/api/v1', mainContractRouter_1.default);
 // SETUP Application

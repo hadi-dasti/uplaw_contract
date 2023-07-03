@@ -53,10 +53,12 @@ export const createContract_1 = async (req: Request, res: Response) => {
 }
 
 // read contract-1 of model 
-export const readContract_1 = async (req: Request, res: Response) => {
+export const readContract_1 = async (req: Request<{ contractId: string }>, res: Response) => {
+    //req.params
+    const { contractId } = req.params;
+
     try {
-        //req.params
-        const contractId = req.params.contractId;
+        
         // aggregation pipeline with nested Array 
         const readContract = await Contract_1.aggregate([
             {
@@ -88,7 +90,7 @@ export const readContract_1 = async (req: Request, res: Response) => {
                     }
                 }
             },
-        ]);   
+        ]);
 
         if (!readContract) {
             return res.status(404).json({
@@ -103,13 +105,13 @@ export const readContract_1 = async (req: Request, res: Response) => {
             msg: "Successfully read Contract_1"
         });
 
-}catch (err: any) {
+    } catch (err: any) {
         return res.status(500).json({
             success: false,
-            msg : "Internal Server Error" + "&&" + err.message
+            msg: "Internal Server Error" + "&&" + err.message
         });
     };
-}
+};
 
 // update contract with contractId
 export const updateContract_1 = async (req: Request, res: Response) => {

@@ -17,7 +17,7 @@ export interface IAdmin extends Document {
     password: string,
     position: string,
     mobileNumber: string,
-    acceptContract:Types.ObjectId | IAcceptContract,
+    finalAcceptContract:Types.ObjectId | IAcceptContract,
     generateTokenAdmin : ()=> string
 }
 
@@ -28,7 +28,7 @@ export const adminSchema = new Schema<IAdmin>({
     password: { type: String, unique: true, minlength: (8), required: [true, 'please provide a password'] },
     position: { type: String, required: [true, 'please provide a position'] },
     mobileNumber: { type: String, unique: true, minlength: (11), required: [true, 'please provide a mobileNumber'] },
-    acceptContract: { type: [Schema.Types.ObjectId], ref: 'AcceptContract' }
+    finalAcceptContract: { type: [Schema.Types.ObjectId], ref: 'AcceptContract' }
 }, {
     timestamps: true
 });
