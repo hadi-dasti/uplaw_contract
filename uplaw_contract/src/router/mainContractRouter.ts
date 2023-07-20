@@ -6,6 +6,10 @@ const router: Router = Router();
 import contractHomePage from './contractRouter/mainPage/mainPageContract';
 router.use('/contract', contractHomePage);
 
+// Implementation of contract chat_socket homepage routers for version_1
+import contractChat from './contractRouter/chatRouter/chatRouter';
+router.use('/contract/chat', contractChat);
+
 // Implementation of contract employee routers for version_1
 import contractEmployee from './contractRouter/employee/employeeRouter';
 router.use('/contract/employee', contractEmployee);
@@ -23,5 +27,5 @@ import acceptContract from './contractRouter/acceptContract/acceptContractEmploy
 router.use('/contract/contract_1/acceptContract', acceptContract);
 
 
-export default router
+export default router;
 

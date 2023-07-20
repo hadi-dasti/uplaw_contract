@@ -8,6 +8,9 @@ const router = (0, express_1.Router)();
 // Implementation of contract homepage routers for version_1
 const mainPageContract_1 = __importDefault(require("./contractRouter/mainPage/mainPageContract"));
 router.use('/contract', mainPageContract_1.default);
+// Implementation of contract chat_socket homepage routers for version_1
+const chatRouter_1 = __importDefault(require("./contractRouter/chatRouter/chatRouter"));
+router.use('/contract/chat', chatRouter_1.default);
 // Implementation of contract employee routers for version_1
 const employeeRouter_1 = __importDefault(require("./contractRouter/employee/employeeRouter"));
 router.use('/contract/employee', employeeRouter_1.default);
