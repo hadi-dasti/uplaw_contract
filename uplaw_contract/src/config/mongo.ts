@@ -12,9 +12,9 @@ async function connectDB() {
         console.log('mongodb connect successfully ')
     } catch (err:any) {
         console.log('MongoDB connection error:', err)
-    }
-}
+    };
+};
 
 
 
-export default connectDB
+export default connectDB;

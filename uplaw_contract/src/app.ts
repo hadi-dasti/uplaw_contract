@@ -6,6 +6,9 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
 
+// setup redis
+import configRedis from './config/redisConfig';
+
 //setup mongodb
 import db from './config/mongo';
 
@@ -43,6 +46,7 @@ const startServer = async () => {
 
         // Set the view engine to EJS
         app.set('view engine', 'ejs');
+
         // Set the views directory
         app.set('views', join(__dirname, 'views'));
 
@@ -56,6 +60,9 @@ const startServer = async () => {
         // start database
         db();
         
+        //run redis
+        configRedis();
+
         // run socket 
         configSocketServer(io);
    
