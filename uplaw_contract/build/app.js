@@ -20,6 +20,8 @@ const http_1 = __importDefault(require("http"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const helmet_1 = __importDefault(require("helmet"));
+// setup redis
+const redisConfig_1 = __importDefault(require("./config/redisConfig"));
 //setup mongodb
 const mongo_1 = __importDefault(require("./config/mongo"));
 // join of config socket
@@ -56,6 +58,8 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
         console.log(`running server on port ${exports.PORT}`);
         // start database
         (0, mongo_1.default)();
+        //run redis
+        (0, redisConfig_1.default)();
         // run socket 
         (0, socketServer_1.configSocketServer)(io);
     }

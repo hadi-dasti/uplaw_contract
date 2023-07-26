@@ -25,6 +25,8 @@ function connectDB() {
         catch (err) {
             console.log('MongoDB connection error:', err);
         }
+        ;
     });
 }
+;
 exports.default = connectDB;
