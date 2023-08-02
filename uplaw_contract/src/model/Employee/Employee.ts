@@ -31,6 +31,7 @@ export interface IEmployee extends Document{
     profileImage: string,
     acceptedContract:Types.ObjectId | IAcceptContract,
     generateAuthEmployeeToken: () => string,
+    telegram_username: string,
     isComparePassword:(password: string) => Promise<boolean>
 }
 

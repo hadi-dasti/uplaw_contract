@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendRegistrationEmail = void 0;
+exports.sendEmailOfEmployeeToApp = exports.sendRegistrationEmail = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 // config server email
 const transporter = nodemailer_1.default.createTransport({
@@ -23,7 +23,7 @@ const transporter = nodemailer_1.default.createTransport({
         pass: "c6474bdc5fec00"
     }
 });
-// setup email
+// setup email for to employee of application
 const sendRegistrationEmail = (email, firstName) => __awaiter(void 0, void 0, void 0, function* () {
     const mailOptions = {
         from: 'contract_uplaw',
@@ -39,5 +39,24 @@ const sendRegistrationEmail = (email, firstName) => __awaiter(void 0, void 0, vo
     catch (error) {
         console.error(`Error sending registration email to ${email}: ${error}`);
     }
+    ;
 });
 exports.sendRegistrationEmail = sendRegistrationEmail;
+// send Email of employee to application
+const sendEmailOfEmployeeToApp = (email, message) => __awaiter(void 0, void 0, void 0, function* () {
+    const optionSendEmail = {
+        from: email,
+        to: "employee.email@example.com",
+        subject: 'New email from employee',
+        text: message
+    };
+    try {
+        yield transporter.sendMail(optionSendEmail);
+        console.log(`send ${email} of employee  with ${message} to employee.email@example.com`);
+    }
+    catch (err) {
+        console.log(`Error of send email with ${err.message}`);
+    }
+    ;
+});
+exports.sendEmailOfEmployeeToApp = sendEmailOfEmployeeToApp;

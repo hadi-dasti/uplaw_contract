@@ -25,7 +25,7 @@ const redisConfig_1 = __importDefault(require("./config/redisConfig"));
 //setup mongodb
 const mongo_1 = __importDefault(require("./config/mongo"));
 // join of config socket
-const socketServer_1 = require("./socket/socketServer");
+const socketConfig_1 = require("./config/socketConfig");
 // main router app
 const mainContractRouter_1 = __importDefault(require("./router/mainContractRouter"));
 // setup environment variable
@@ -61,7 +61,7 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
         //run redis
         (0, redisConfig_1.default)();
         // run socket 
-        (0, socketServer_1.configSocketServer)(io);
+        (0, socketConfig_1.configSocketServer)(io);
     }
     catch (err) {
         console.log(err.stack);

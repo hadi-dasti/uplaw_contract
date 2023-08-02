@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 import aboutMeRouter from './contractRouter/about_me/aboutMeRouter';
+import contactUsRouter from './contractRouter/contact_us/contactUsRouter';
 import articleRouter from './contractRouter/article/articleRouter';
 import contractHomePage from './contractRouter/mainPage/mainPageContract';
 import contractChat from './contractRouter/chatRouter/chatRouter';
@@ -20,6 +21,9 @@ router.use('/contract', contractHomePage);
 
 // Implementation  of article in contract page
 router.use('/contract/article', articleRouter);
+
+// Implementation contact_us
+router.use('/contract/contact_us', contactUsRouter);
 
 // Implementation  of about_me in contract page
 router.use('/contract/about_me', aboutMeRouter);

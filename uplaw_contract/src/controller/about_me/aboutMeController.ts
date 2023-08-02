@@ -1,5 +1,5 @@
 import {Request,Response } from 'express';
-import { aboutMe ,About_me} from '../../model/About_me/aboutMe';
+import { aboutMe ,About_me} from '../../interface/aboutMe';
 
 
 export class AboutMeController {

@@ -313,6 +313,7 @@ export const employeeForgetPassword = async (req: Request, res: Response) => {
     });
   }
 }
+
 // verify reset mobileNumber Employee
 export const resetPasswordEmployee = async (req: Request<{id:string}>, res: Response) => {
   const { lastFourDigits, employeeId } = req.body;

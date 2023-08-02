@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AboutMeController = void 0;
-const aboutMe_1 = require("../../model/About_me/aboutMe");
+const aboutMe_1 = require("../../interface/aboutMe");
 class AboutMeController {
     constructor() {
         // Initialize aboutMe to null

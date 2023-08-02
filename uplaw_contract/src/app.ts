@@ -13,7 +13,7 @@ import configRedis from './config/redisConfig';
 import db from './config/mongo';
 
 // join of config socket
-import { configSocketServer } from './socket/socketServer';
+import { configSocketServer } from './config/socketConfig';
 
 // main router app
 import mainRouter from './router/mainContractRouter';
@@ -27,7 +27,7 @@ export const app: Application = express();
 
 
 
-         //setup server socket
+//setup server socket
 const server = http.createServer(app);
 const io = new Server(server);
 export { io };
