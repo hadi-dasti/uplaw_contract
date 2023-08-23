@@ -4,6 +4,8 @@ import { generateOtp } from '../../utile/otp';
 import { sendRegistrationEmail } from '../../utile/sendEmail';
 
 
+// CONST NUMBER
+const OTP_LENGTH = 6;
 
 //register employee
 export const employeeRegistration = async (req: Request, res: Response) => {
@@ -43,12 +45,13 @@ export const employeeRegistration = async (req: Request, res: Response) => {
       createAt,
       profileImage
     });
+
     // check request body
     if (!employeeData) {
       return res.status(404).json({
         success: false,
         msg: 'Not Found Error'
-      })
+      });
     };
             
     // send email to employee for register successfully
@@ -61,12 +64,12 @@ export const employeeRegistration = async (req: Request, res: Response) => {
       msg: 'successfully create document user on database'
     });
                   
-  } catch (error: any) {
+  } catch (err: any) {
     return res.status(500).json({
       success: false,
-      msg: ['Internal Server Error', error.message]
+      msg: `Internal Server Error for register Employee : ${err.message}`
     });
-  }
+  };
 };
 
 //login employee
@@ -96,7 +99,7 @@ export const employeeLogin = async (req: Request, res: Response) => {
     };
 
     // generate otp employee
-    let otp = generateOtp(6);
+    let otp = generateOtp(OTP_LENGTH);
     employees.mobileOtp = otp;
     await employees.save();
     
@@ -109,13 +112,12 @@ export const employeeLogin = async (req: Request, res: Response) => {
       msg: 'successfully send otp to mobileNumber employee'
     });
 
-  } catch (err) {
-    console.log(err)
+  } catch (err:any) {
     return res.status(500).json({
       success: false,
-      msg: 'Internal Server Error'
-    })
-  }
+      msg: `Internal Server Error for login Employee : ${err.message}`
+    });
+  };
 };
 
 //verify login employee with otp 
@@ -123,6 +125,7 @@ export const verifyLoginEmployee = async (req: Request, res: Response) => {
   const { otp, employeeId } = req.body;
 
   try {
+    
     //check find employee with id of database
     const employee = await Employee.findById({ _id: employeeId });
 
@@ -155,30 +158,37 @@ export const verifyLoginEmployee = async (req: Request, res: Response) => {
       })
     }
 
-    // Generate JWT
-    const getToken = employee.generateAuthEmployeeToken()
+    // Generate accessToken
+    const generateAccessToken = employee.generateAccessTokenEmployee();
+
+    // Generate refreshToken
+    const generateRefreshToken = employee.generateRefreshTokenEmployee();
+    
 
     // last update document of employee 
-    employee.mobileOtp = ""
+    employee.mobileOtp = "";
+    employee.refreshToken = generateRefreshToken;
     await employee.save();
 
     // send token and employeeId of document for login  employee in application 
     return res.status(200).json({
       success: true,
       data: {
-        getToken,
+        generateAccessToken,
+        generateRefreshToken,
         employeeID: employee._id
       },
       msg: "successfully login employee with mobileNumber "
     });
 
-  } catch (error: any) {
+  } catch (err: any) {
     return res.status(500).json({
       success: false,
-      msg: ['Internal Server Error', error.message]
+      msg: `Internal Server Error:${err.message}`
     });
   };
 };
+
 
 // get All Employee 
 export const getAllEmployee = async (req: Request, res: Response) => {

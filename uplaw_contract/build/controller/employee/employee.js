@@ -13,6 +13,8 @@ exports.resetPasswordEmployee = exports.employeeForgetPassword = exports.deleteE
 const Employee_1 = require("../../model/Employee/Employee");
 const otp_1 = require("../../utile/otp");
 const sendEmail_1 = require("../../utile/sendEmail");
+// CONST NUMBER
+const OTP_LENGTH = 6;
 //register employee
 const employeeRegistration = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // upload filename photo
@@ -52,12 +54,13 @@ const employeeRegistration = (req, res) => __awaiter(void 0, void 0, void 0, fun
             msg: 'successfully create document user on database'
         });
     }
-    catch (error) {
+    catch (err) {
         return res.status(500).json({
             success: false,
-            msg: ['Internal Server Error', error.message]
+            msg: `Internal Server Error for register Employee : ${err.message}`
         });
     }
+    ;
 });
 exports.employeeRegistration = employeeRegistration;
 //login employee
@@ -83,7 +86,7 @@ const employeeLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         }
         ;
         // generate otp employee
-        let otp = (0, otp_1.generateOtp)(6);
+        let otp = (0, otp_1.generateOtp)(OTP_LENGTH);
         employees.mobileOtp = otp;
         yield employees.save();
         return res.status(200).json({
@@ -96,12 +99,12 @@ const employeeLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         });
     }
     catch (err) {
-        console.log(err);
         return res.status(500).json({
             success: false,
-            msg: 'Internal Server Error'
+            msg: `Internal Server Error for login Employee : ${err.message}`
         });
     }
+    ;
 });
 exports.employeeLogin = employeeLogin;
 //verify login employee with otp 
@@ -137,25 +140,29 @@ const verifyLoginEmployee = (req, res) => __awaiter(void 0, void 0, void 0, func
                 msg: 'Invalid verification code'
             });
         }
-        // Generate JWT
-        const getToken = employee.generateAuthEmployeeToken();
+        // Generate accessToken
+        const generateAccessToken = employee.generateAccessTokenEmployee();
+        // Generate refreshToken
+        const generateRefreshToken = employee.generateRefreshTokenEmployee();
         // last update document of employee 
         employee.mobileOtp = "";
+        employee.refreshToken = generateRefreshToken;
         yield employee.save();
         // send token and employeeId of document for login  employee in application 
         return res.status(200).json({
             success: true,
             data: {
-                getToken,
+                generateAccessToken,
+                generateRefreshToken,
                 employeeID: employee._id
             },
             msg: "successfully login employee with mobileNumber "
         });
     }
-    catch (error) {
+    catch (err) {
         return res.status(500).json({
             success: false,
-            msg: ['Internal Server Error', error.message]
+            msg: `Internal Server Error:${err.message}`
         });
     }
     ;

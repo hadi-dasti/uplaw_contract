@@ -22,7 +22,7 @@ export const validateRegisterEmployee = (req: Request, res: Response, next: Next
             'string.max': 'Last name cannot be longer than {{#limit}} characters',
             'any.required': 'Last name is required'
         }),
-        password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{6,30}$')).messages({
+        password: Joi.string().required().min(8).pattern(new RegExp('^[a-zA-Z0-9]{6,30}$')).messages({
             'string.pattern.base': 'Password must be between 8 and 30 characters and contain only alpha-numeric characters'
         }),
         address: Joi.string().min(10).trim().required().messages({
@@ -126,7 +126,7 @@ export const validateVerifyEmployee = (req: Request, res: Response, next: NextFu
             'string.base': 'Employee ID must be a string',
             'string.empty': 'Employee ID is required', 
         }),
-        otp: Joi.string().length(6).required().messages({
+        otp: Joi.string().length(6).pattern(/^[0-9]{6}$/).required().messages({
             'string.base': 'OTP must be a string',
             'string.empty': 'OTP is Empty',
         })
@@ -179,6 +179,7 @@ export const validateDeleteIDEmployee = (req:Request,res:Response, next:NextFunc
         })
     }
 }
+
 // Define the joi Schema for validation request body of forget password employee
 export const validateForgetPasswordEmployee = (req:Request, res:Response, next:NextFunction) => {
     // request body of forget password

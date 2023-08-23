@@ -26,7 +26,7 @@ const validateRegisterEmployee = (req, res, next) => {
             'string.max': 'Last name cannot be longer than {{#limit}} characters',
             'any.required': 'Last name is required'
         }),
-        password: joi_1.default.string().pattern(new RegExp('^[a-zA-Z0-9]{6,30}$')).messages({
+        password: joi_1.default.string().required().min(8).pattern(new RegExp('^[a-zA-Z0-9]{6,30}$')).messages({
             'string.pattern.base': 'Password must be between 8 and 30 characters and contain only alpha-numeric characters'
         }),
         address: joi_1.default.string().min(10).trim().required().messages({
@@ -128,7 +128,7 @@ const validateVerifyEmployee = (req, res, next) => {
             'string.base': 'Employee ID must be a string',
             'string.empty': 'Employee ID is required',
         }),
-        otp: joi_1.default.string().length(6).required().messages({
+        otp: joi_1.default.string().length(6).pattern(/^[0-9]{6}$/).required().messages({
             'string.base': 'OTP must be a string',
             'string.empty': 'OTP is Empty',
         })

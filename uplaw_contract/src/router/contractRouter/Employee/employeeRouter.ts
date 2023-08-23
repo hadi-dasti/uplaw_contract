@@ -1,8 +1,11 @@
 import { Router } from 'express';
-const router: Router = Router();
 
-// Authorization for employee
-import { authEmployee } from '../../../middleware/authEmployee/authEmployee';
+//* middelware router for employee
+import verifyRefreshTokenRouter from './employeeRefreshTokenRouter';
+
+
+// Authorization of employee
+import { authEmployeeMiddleware } from '../../../middleware/authEmployee/authEmployee';
 
 //import employee controller 
 import { employeeRegistration, employeeLogin, verifyLoginEmployee, getAllEmployee, getOeEmployee, employeeForgetPassword, resetPasswordEmployee, deleteEmployee } from '../../../controller/employee/employee';
@@ -14,12 +17,21 @@ import uploadImage from '../../../middleware/upload/uploadImage';
 import { validateRegisterEmployee, validateLoginEmployee, validateVerifyEmployee, validateForgetPasswordEmployee, validateResetPasswordEmployee, validateDeleteIDEmployee }
     from '../../../validator/employeeValidator/employeeValidation';
 
+    
+//build router
+const router: Router = Router();
+    
+
 //create router employee 
 router.post('/register', uploadImage.single('profileImage'), validateRegisterEmployee, employeeRegistration);
 router.post('/login', validateLoginEmployee, employeeLogin);
 router.post('/verifyEmployeeLogin', validateVerifyEmployee, verifyLoginEmployee);
-router.get('/getAllEmployee', authEmployee, getAllEmployee);
-router.get('/getOneEmployee/:id', authEmployee, getOeEmployee);
+
+//build router middelware  for verify refreshToken  for generate new accessToken
+router.use('/verify_refreshToken', verifyRefreshTokenRouter);
+
+router.get('/getAllEmployee', authEmployeeMiddleware, getAllEmployee);
+router.get('/getOneEmployee/:id',authEmployeeMiddleware, getOeEmployee);
 router.delete('/deleteEmployee/:id', validateDeleteIDEmployee, deleteEmployee);
 
 // create router for forget and reset password  employee of database

@@ -13,6 +13,8 @@ const employeeRouter_1 = __importDefault(require("./contractRouter/employee/empl
 const adminSite_1 = __importDefault(require("./contractRouter/admin/adminSite"));
 const contractRouter_1_1 = __importDefault(require("./contractRouter/contract/contractRouter_1"));
 const acceptContractEmployee_1 = __importDefault(require("./contractRouter/acceptContract/acceptContractEmployee"));
+const cashDataContractRouter_1 = __importDefault(require("./contractRouter/cashData/cashDataContractRouter"));
+const registerAccountGoogleRouter_1 = __importDefault(require("./contractRouter/account_google/registerAccountGoogleRouter"));
 // setup router of Router Express
 const router = (0, express_1.Router)();
 // Implementation of contract homepage routers for version_1
@@ -33,4 +35,8 @@ router.use('/contract/admin', adminSite_1.default);
 router.use('/contract/contract_1', contractRouter_1_1.default);
 // Implementation of the router to accept the employee contract version_1
 router.use('/contract/contract_1/acceptContract', acceptContractEmployee_1.default);
+// Implementation router about cash information contract employee of model with redis
+router.use('/contract/cash_contract', cashDataContractRouter_1.default);
+//*Implementation router for register employee with account_google
+router.use('/contract/account_google', registerAccountGoogleRouter_1.default);
 exports.default = router;

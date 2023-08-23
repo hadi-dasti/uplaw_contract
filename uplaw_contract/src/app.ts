@@ -4,7 +4,9 @@ import { Server } from 'socket.io';
 import http from 'http';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import helmet from 'helmet';
+import helmet from 'helmet';``
+import passport from "passport";
+import './config/passport_config';
 
 // setup redis
 import configRedis from './config/redisConfig';
@@ -52,6 +54,9 @@ const startServer = async () => {
 
         // main router
         app.use('/api/v1', mainRouter);
+
+        //run passport
+        app.use(passport.initialize());
 
         // start server app
         server.listen(PORT);

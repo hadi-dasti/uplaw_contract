@@ -1,42 +1,74 @@
-import { Request, Response, NextFunction } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import jwt,{ Secret } from 'jsonwebtoken';
 import { join } from 'path';
 import dotenv from 'dotenv';
+import ms from 'ms';
 
-// setup join path as dotenv of JWT_SECRETE
+// Load environment variables from .env file
 dotenv.config({ path: join(__dirname, '../../../../uplaw_contract/.env') });
-export const JWT_SECRETE = process.env.JWT_SECRETE;
 
-interface AuthRequest extends Request {
-  user?:any;
+// Set JWT secret and access token expiration time from environment variables
+export const JWT_SECRET = process.env.JWT_SECRET as Secret;
+export const JWT_ACCESS_TOKEN_EXPIRATION_TIME = process.env.JWT_ACCESS_TOKEN_EXPIRATION_TIME;
+
+// Define AuthRequest interface to include employee field
+export interface AuthRequest extends Request {
+   employee?: any;
 };
 
-// setup middleware function for authorization employee
-export const authEmployee = (req: AuthRequest, res: Response, next: NextFunction) => {
-    try {
-        const token = req.header('Authorization')?.replace('Bearer ', '');
 
-        if (!token) {
+// Middleware function for authorizing employee access
+export const authEmployeeMiddleware = async (req: AuthRequest, res: Response, next: NextFunction) => {
+    try {
+        // Get the Authorization header and remove the "Bearer " prefix
+        const authHeader = req.header('Authorization')?.replace('Bearer ', '');
+
+        // Return 401 error if Authorization header is missing or invalid
+        if (!authHeader) {
+            return res.status(401).json({
+                success: false,
+                msg: "Not authorized to access heder"
+            });
+        };
+
+        // Verify the JWT access token and decode its payload
+        const decodedToken = jwt.verify(authHeader as string, JWT_SECRET as Secret) as { _id: string, exp: number };
+
+        if (!decodedToken) {
             return res.status(401).json({
                 success: false,
                 msg: "Not authorized to access this resource"
-            })
-        }
+            });
+        };
+       
+        // Check if the JWT access token has expired
+        const expireTimeAccessToken = ms(JWT_ACCESS_TOKEN_EXPIRATION_TIME || '0');
+        const currentTimeInMs = Date.now();
+        const tokenExpirationTimeInMs = decodedToken.exp * 1000;
 
-        const decoded = jwt.verify(token, JWT_SECRETE as Secret);
-        req.user = decoded
-        if (!decoded) {
+         // Log the current time
+        const now = new Date();
+        const time = now.toLocaleString();
+        console.log(`AccessToken checked at ${time}`);
+        
+        if (currentTimeInMs > tokenExpirationTimeInMs + expireTimeAccessToken) {
             return res.status(401).json({
                 success: false,
-                nsg: "Not authorized to access this resource"
-            })
+                msg: "Access token has expired"
+            });
         };
+
+        
+    
+        // Set the employee field in the request object and call the next middleware function
+        req.employee = decodedToken._id;
+        
         return next()
 
-    } catch (error: any) {
+    } catch (err: any) {
         return res.status(500).json({
             success: false,
-            msg: "Internal Server Error" + ";" + error.message
+            msg: `Internal Server Error:${err.message}`
         });
-    }
+    };
 };

@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
 
+
+
+
+
 // create main page of application
 export const viewContractPageController = (req: Request, res: Response) => {
     const data = {
@@ -21,3 +25,9 @@ export const viewContractPageController = (req: Request, res: Response) => {
         console.log(`Internal Server Error : ${error.message}`);
     };   
 };
+
+
+
+
+
+

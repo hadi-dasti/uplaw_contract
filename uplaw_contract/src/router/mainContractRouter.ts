@@ -9,6 +9,8 @@ import contractEmployee from './contractRouter/employee/employeeRouter';
 import contractAdmin from './contractRouter/admin/adminSite';
 import contractModel from './contractRouter/contract/contractRouter_1';
 import acceptContract from './contractRouter/acceptContract/acceptContractEmployee';
+import cashDataContractRouter from './contractRouter/cashData/cashDataContractRouter';
+import registerAccountGoogelRouter from './contractRouter/account_google/registerAccountGoogleRouter';
 
 
 
@@ -42,6 +44,12 @@ router.use('/contract/contract_1', contractModel);
 
 // Implementation of the router to accept the employee contract version_1
 router.use('/contract/contract_1/acceptContract', acceptContract);
+
+// Implementation router about cash information contract employee of model with redis
+router.use('/contract/cash_contract', cashDataContractRouter);
+
+//*Implementation router for register employee with account_google
+router.use('/contract/account_google', registerAccountGoogelRouter);
 
 
 export default router;

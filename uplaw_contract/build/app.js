@@ -20,6 +20,9 @@ const http_1 = __importDefault(require("http"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const helmet_1 = __importDefault(require("helmet"));
+``;
+const passport_1 = __importDefault(require("passport"));
+require("./config/passport_config");
 // setup redis
 const redisConfig_1 = __importDefault(require("./config/redisConfig"));
 //setup mongodb
@@ -53,6 +56,8 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
         exports.app.set('views', (0, path_1.join)(__dirname, 'views'));
         // main router
         exports.app.use('/api/v1', mainContractRouter_1.default);
+        //run passport
+        exports.app.use(passport_1.default.initialize());
         // start server app
         server.listen(exports.PORT);
         console.log(`running server on port ${exports.PORT}`);

@@ -2,7 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const contactUsController_1 = require("../../../controller/contact_us/contactUsController");
+//build router of instance Router Express
 const router = (0, express_1.Router)();
+// create object instans of class contactUS
 const contractUs = new contactUsController_1.ContractUsController();
 // get router of contact us
 router.get('/', contractUs.getContactUs.bind(contractUs));

@@ -7,7 +7,7 @@ dotenv.config({path:join(__dirname, './../../.env')});
 
 const redisConfig = async () => {
       // Create a Redis client using the REDIS_URL environment variable
-     const client = redis.createClient({ url: process.env.REDIS_URL });
+     const client = redis.createClient({ url: process.env.REDIS_URL as string});
     
      // Log a message when the client connects to Redis
      client.on('connect', () => {

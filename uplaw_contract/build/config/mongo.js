@@ -12,14 +12,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.MONGO_URL = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
+const dotenv_1 = __importDefault(require("dotenv"));
+const path_1 = require("path");
+// Load environment variables from .env files
+dotenv_1.default.config({ path: (0, path_1.join)(__dirname, './../../.env') });
 // config url
-const mongo_url = 'mongodb://127.0.0.1/contract';
+exports.MONGO_URL = process.env.MONGO_URL;
+const autoIndex = process.env.NODE_ENV === 'development';
 // connect database mongodb
 function connectDB() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            yield mongoose_1.default.connect(mongo_url);
+            yield mongoose_1.default.connect(exports.MONGO_URL, {
+                autoIndex
+            });
             console.log('mongodb connect successfully ');
         }
         catch (err) {

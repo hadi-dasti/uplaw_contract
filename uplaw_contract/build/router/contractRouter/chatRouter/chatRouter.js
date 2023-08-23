@@ -10,5 +10,7 @@ router.get('/viewChatButton', chatController_1.ShowButtonChatController);
 //send message to server of employee
 router.post('/sendMessage', chatController_1.sendMessageToServerController);
 // answer the question to employee
-router.post('/replyMessage', chatController_1.messageTOEmployeeController);
+router.post('/replyMessage', chatController_1.messageToEmployeeController);
+// send event to all employee with acknowledgements
+router.post('/event_to_all_Employee', chatController_1.sendNotifToAllEmployee);
 exports.default = router;
