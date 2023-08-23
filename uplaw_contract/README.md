@@ -6,3 +6,4 @@
 #mongoose
 Starting a new project that includes a two-person team
 add forget and reset login employee in application with mobileNumber 
+add register account_google with passport js
