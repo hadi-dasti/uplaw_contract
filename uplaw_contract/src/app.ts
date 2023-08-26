@@ -1,82 +1,50 @@
 import express, { Application } from 'express';
 import { join } from 'path';
-import { Server } from 'socket.io';
-import http from 'http';
 import cors from 'cors';
-import dotenv from 'dotenv';
-import helmet from 'helmet';``
+import helmet from 'helmet';
 import passport from "passport";
 import './config/passport_config';
-
-// setup redis
-import configRedis from './config/redisConfig';
-
-//setup mongodb
-import db from './config/mongo';
-
-// join of config socket
-import { configSocketServer } from './config/socketConfig';
 
 // main router app
 import mainRouter from './router/mainContractRouter';
 
-// setup environment variable
-dotenv.config({ path: join(__dirname, '../../uplaw_contract/.env') });
-export const PORT = process.env.PORT;
 
-//start Application
+// setup Express middleware
 export const app: Application = express();
 
 
+// Helmet middleware for security headers
+app.use(helmet());
 
-//setup server socket
-const server = http.createServer(app);
-const io = new Server(server);
-export { io };
+// Parse JSON request bodies
+app.use(express.json());
 
-const startServer = async () => {
+// Parse URL-encoded request bodies
+app.use(express.urlencoded({ extended: true }));
 
-    try {
-        //setup Express
-        // middleware
-        app.use(helmet());
-        app.use(express.json())
-        app.use(express.urlencoded({ extended: true }))
-        app.use(cors());
-        // path for uploadImage employee
-        app.use('/image', express.static(join(__dirname, 'image')));
+// Enable Cross-Origin Resource Sharing (CORS)
+app.use(cors());
 
-        // Set the view engine to EJS
-        app.set('view engine', 'ejs');
+// Serve static files from the 'image' directory
+app.use('/image', express.static(join(__dirname, 'image')));
 
-        // Set the views directory
-        app.set('views', join(__dirname, 'views'));
+// Set the view engine to EJS
+app.set('view engine', 'ejs');
 
-        // main router
-        app.use('/api/v1', mainRouter);
+// Set the views directory
+app.set('views', join(__dirname, 'views'));
 
-        //run passport
-        app.use(passport.initialize());
+// main router
+app.use('/api/v1', mainRouter);
 
-        // start server app
-        server.listen(PORT);
-        console.log(`running server on port ${PORT}`);
+// Initialize Passport for authentication
+app.use(passport.initialize());
 
-        // start database
-        db();
-        
-        //run redis
-        configRedis();
+export default app; 
 
-        // run socket 
-        configSocketServer(io);
+       
    
-    } catch (err: any) {
-        console.log(err.stack);
-    };
-};
-     
-startServer();
+
 
 
 

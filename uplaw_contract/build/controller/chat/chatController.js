@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendNotifToAllEmployee = exports.messageToEmployeeController = exports.sendMessageToServerController = exports.ShowButtonChatController = exports.id = void 0;
 const Employee_1 = require("../../model/Employee/Employee");
 const uuid_1 = require("uuid");
-const app_1 = require("../../app");
+const server_1 = require("../../server");
 const redis_adapter_1 = require("@socket.io/redis-adapter");
 const redis_1 = require("redis");
 const dotenv_1 = __importDefault(require("dotenv"));
@@ -74,7 +74,7 @@ const sendMessageToServerController = (req, res) => __awaiter(void 0, void 0, vo
         }
         ;
         // send  message to server with unique id 
-        app_1.io.emit("question", { id: exports.id, message });
+        server_1.io.emit("question", { id: exports.id, message });
         console.log(`question of employee with ${exports.id} and ${message}`);
         return res.status(200).json({
             success: true,
@@ -102,7 +102,7 @@ const messageToEmployeeController = (req, res) => __awaiter(void 0, void 0, void
             });
         }
         // send answer to employee 
-        app_1.io.timeout(20000).emit('response', {
+        server_1.io.timeout(20000).emit('response', {
             id: exports.id,
             message: ` answer of server to employee for message ${idEmployee} was: ${answer}`
         });
@@ -131,9 +131,9 @@ const sendNotifToAllEmployee = (req, res) => __awaiter(void 0, void 0, void 0, f
         // Connect to both Redis clients using Promise.all
         yield Promise.all([pubClient.connect(), subClient.connect()]);
         // Set up the Socket.IO adapter using createAdapter
-        app_1.io.adapter((0, redis_adapter_1.createAdapter)(pubClient, subClient));
+        server_1.io.adapter((0, redis_adapter_1.createAdapter)(pubClient, subClient));
         // Broadcast the message to all connected clients
-        app_1.io.emit('notification', message);
+        server_1.io.emit('notification', message);
         // Return a success response with a message indicating that the notification was sent
         return res.status(200).json({
             success: true,

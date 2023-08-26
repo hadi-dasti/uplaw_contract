@@ -4,8 +4,8 @@
   "description": "build project with node.js & express js & typescript & mongodb & react js",
   "main": "",
   "scripts": {
-    "start": "node build/app.js",
-    "dev": "ts-node-dev src/app.ts"
+    "start": "node build/server.js",
+    "dev": "ts-node-dev src/server.ts"
   },
   "repository": {
     "type": "git",
@@ -64,7 +64,6 @@
     "pm2": "^5.3.0",
     "redis": "^4.6.7",
     "socket.io": "^4.7.1",
-    "socket.io-client": "^4.7.1",
     "uuid": "^9.0.0"
   }
 }

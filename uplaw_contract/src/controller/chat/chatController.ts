@@ -1,7 +1,7 @@
 import {Request,Response } from 'express';
 import { Employee} from '../../model/Employee/Employee';
 import { v4 as uuidv4 } from 'uuid';
-import { io } from '../../app';
+import { io } from '../../server';
 import { createAdapter } from "@socket.io/redis-adapter";
 import { createClient } from "redis";
 import dotenv from 'dotenv';
