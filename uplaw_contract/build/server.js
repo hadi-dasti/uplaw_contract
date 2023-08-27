@@ -31,6 +31,7 @@ exports.PORT = process.env.PORT;
 const server = http_1.default.createServer(app_1.default);
 const io = new socket_io_1.Server(server);
 exports.io = io;
+// run serevrs
 const startServers = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // start database

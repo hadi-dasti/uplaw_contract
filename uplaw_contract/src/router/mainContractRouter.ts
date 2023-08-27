@@ -3,12 +3,12 @@ import { Router } from 'express';
 import aboutMeRouter from './contractRouter/about_me/aboutMeRouter';
 import contactUsRouter from './contractRouter/contact_us/contactUsRouter';
 import articleRouter from './contractRouter/article/articleRouter';
-import contractHomePage from './contractRouter/mainPage/mainPageContract';
-import contractChat from './contractRouter/chatRouter/chatRouter';
-import contractEmployee from './contractRouter/employee/employeeRouter';
-import contractAdmin from './contractRouter/admin/adminSite';
-import contractModel from './contractRouter/contract/contractRouter_1';
-import acceptContract from './contractRouter/acceptContract/acceptContractEmployee';
+import contractHomePageRouter from './contractRouter/mainPage/mainPageContract';
+import contractChatRouter from './contractRouter/chatRouter/chatRouter';
+import contractEmployeeRouter from './contractRouter/employee/employeeRouter';
+import contractAdminRouter from './contractRouter/admin/adminSite';
+import contractModelRouter from './contractRouter/contract/contractRouter_1';
+import acceptContractRouter from './contractRouter/acceptContract/acceptContractEmployee';
 import cashDataContractRouter from './contractRouter/cashData/cashDataContractRouter';
 import registerAccountGoogelRouter from './contractRouter/account_google/registerAccountGoogleRouter';
 
@@ -19,7 +19,7 @@ const router: Router = Router();
 
 
 // Implementation of contract homepage routers for version_1
-router.use('/contract', contractHomePage);
+router.use('/contract', contractHomePageRouter);
 
 // Implementation  of article in contract page
 router.use('/contract/article', articleRouter);
@@ -31,19 +31,19 @@ router.use('/contract/contact_us', contactUsRouter);
 router.use('/contract/about_me', aboutMeRouter);
 
 // Implementation of contract chat_socket homepage routers for version_1
-router.use('/contract/chat', contractChat);
+router.use('/contract/chat', contractChatRouter);
 
 // Implementation of contract employee routers for version_1
-router.use('/contract/employee', contractEmployee);
+router.use('/contract/employee', contractEmployeeRouter);
 
 // Implementation of contract admin routers for version_1
-router.use('/contract/admin', contractAdmin);
+router.use('/contract/admin', contractAdminRouter);
 
 // Implementation of contracts routers for version_1
-router.use('/contract/contract_1', contractModel);
+router.use('/contract/contract_1', contractModelRouter);
 
 // Implementation of the router to accept the employee contract version_1
-router.use('/contract/contract_1/acceptContract', acceptContract);
+router.use('/contract/contract_1/acceptContract', acceptContractRouter);
 
 // Implementation router about cash information contract employee of model with redis
 router.use('/contract/cash_contract', cashDataContractRouter);

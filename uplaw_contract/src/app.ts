@@ -1,9 +1,10 @@
-import express, { Application } from 'express';
+import express from 'express';
+import { Application } from 'express';
 import { join } from 'path';
 import cors from 'cors';
 import helmet from 'helmet';
 import passport from "passport";
-import './config/passport_config';
+
 
 // main router app
 import mainRouter from './router/mainContractRouter';
@@ -42,8 +43,7 @@ app.use(passport.initialize());
 
 export default app; 
 
-       
-   
+
 
 
 

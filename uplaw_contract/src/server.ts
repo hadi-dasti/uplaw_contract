@@ -24,7 +24,7 @@ export const PORT = process.env.PORT;
 const server = http.createServer(app);
 const io = new Server(server);
 
-
+// run serevrs
 const startServers = async () => {
     try {
         // start database

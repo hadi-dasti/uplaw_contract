@@ -9,7 +9,6 @@ const path_1 = require("path");
 const cors_1 = __importDefault(require("cors"));
 const helmet_1 = __importDefault(require("helmet"));
 const passport_1 = __importDefault(require("passport"));
-require("./config/passport_config");
 // main router app
 const mainContractRouter_1 = __importDefault(require("./router/mainContractRouter"));
 // setup Express middleware
