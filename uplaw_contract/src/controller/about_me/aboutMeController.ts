@@ -3,6 +3,7 @@ import { aboutMe ,About_me} from '../../interface/aboutMe';
 
 
 export class AboutMeController {
+
     // Initialize aboutMe to null
     private aboutMe: About_me | null = null;
 
@@ -17,7 +18,7 @@ export class AboutMeController {
                 success: false,
                 msg: "All fields are required"
             });
-        };
+        }
             // Create aboutMe object using request body
              this.aboutMe = {
             companyName,
@@ -34,6 +35,7 @@ export class AboutMeController {
                 msg: "About me created"
             });       
     };
+
      // Get aboutMe object
     public getAboutMe(req: Request, res: Response): Response {
         
@@ -52,11 +54,12 @@ export class AboutMeController {
             msg: "About me retrieved"
         });
             
-        } catch (error: any) {
+        } catch (error) {
             // Return error response for any unexpected errors
+            console.error(error)
             return res.status(500).json({
                 success: false,
-                msg: `internal Server Error:${error.message}`
+                msg: `internal Server Error:${error}`
             });
         };      
     };  
