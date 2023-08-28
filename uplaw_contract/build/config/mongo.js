@@ -20,14 +20,11 @@ const path_1 = require("path");
 dotenv_1.default.config({ path: (0, path_1.join)(__dirname, './../../.env') });
 // config url
 exports.MONGO_URL = process.env.MONGO_URL;
-const autoIndex = process.env.NODE_ENV === 'development';
 // connect database mongodb
 function connectDB() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            yield mongoose_1.default.connect(exports.MONGO_URL, {
-                autoIndex
-            });
+            yield mongoose_1.default.connect(exports.MONGO_URL);
             console.log('mongodb connect successfully ');
         }
         catch (err) {

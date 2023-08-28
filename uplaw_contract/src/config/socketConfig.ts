@@ -1,18 +1,20 @@
-import { Server, Socket } from 'socket.io';
+import type { Server, Socket } from 'socket.io'; 
 
 
-
-export const configSocketServer = (io: Server) => {
+// Configure the socket server
+export const configSocketServer = (io: Server): Server => {
+     // Listen for incoming connections
     io.on("connection", (socket: Socket) => {
-        console.log("A employee Connected");
+        console.log("A new employee Connected");
 
         // handel custom event
         socket.on('chat message', (msg: string) => {
             console.log('Message:', msg);
             io.emit('chat message', msg)
         });
-        socket.on('disconnected', () => {
-            console.log('A employee disconnected')
+        // Listen for disconnect events
+        socket.on('disconnect', () => {
+            console.log('A employee disconnected');
         });
     });
     return io;

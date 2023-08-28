@@ -8,17 +8,13 @@ dotenv.config({path:join(__dirname, './../../.env')});
 
 // config url
 export const MONGO_URL = process.env.MONGO_URL as string
-const autoIndex = process.env.NODE_ENV === 'development';
-
 
 // connect database mongodb
-async function connectDB() {
+async function connectDB():Promise<void> {
     try {
-        await mongoose.connect(MONGO_URL, {
-            autoIndex
-        })
+        await mongoose.connect(MONGO_URL)
         console.log('mongodb connect successfully ')
-    } catch (err:any) {
+    } catch (err) {
         console.log('MongoDB connection error:', err)
     };
 };

@@ -17,6 +17,7 @@ const passport_google_oauth20_1 = __importDefault(require("passport-google-oauth
 const Employee_1 = require("../model/Employee/Employee");
 const dotenv_1 = __importDefault(require("dotenv"));
 const path_1 = require("path");
+// const GoogleStrategy = passportGoogle.Strategy;
 const GoogleStrategy = passport_google_oauth20_1.default.Strategy;
 // Load environment variables from .env files
 dotenv_1.default.config({ path: (0, path_1.join)(__dirname, './../../.env') });
@@ -41,7 +42,6 @@ passport_1.default.use(new GoogleStrategy({
     callbackURL: process.env.CALLBACKURL,
 }, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
-    console.log(profile);
     try {
         // Find the employee by their Google ID
         const existEmployee = yield Employee_1.Employee.findOne({ googleId: profile.id });

@@ -1,5 +1,5 @@
 import express from 'express';
-import { Application } from 'express';
+import type { Application } from 'express';
 import { join } from 'path';
 import cors from 'cors';
 import helmet from 'helmet';

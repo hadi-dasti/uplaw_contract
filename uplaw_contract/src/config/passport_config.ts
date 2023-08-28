@@ -1,11 +1,13 @@
 import passport from "passport";
+import type { Profile } from 'passport';
+import type { Strategy as GoogleStrategyType } from 'passport-google-oauth20';
 import passportGoogle from "passport-google-oauth20";
 import { Employee } from '../model/Employee/Employee';
 import dotenv from 'dotenv';
 import { join } from 'path';
 
-const GoogleStrategy = passportGoogle.Strategy;
-
+// const GoogleStrategy = passportGoogle.Strategy;
+const GoogleStrategy: typeof GoogleStrategyType = passportGoogle.Strategy;
 // Load environment variables from .env files
 dotenv.config({path:join(__dirname, './../../.env')});
 
@@ -31,13 +33,12 @@ passport.deserializeUser(async (id, done) => {
 passport.use(
   new GoogleStrategy(
     {
-      clientID:process.env.CLIENTID as string,
-      clientSecret:process.env.CLIENTSECRET as string,
-      callbackURL:process.env.CALLBACKURL as string,
+      clientID: process.env.CLIENTID as string,
+      clientSecret: process.env.CLIENTSECRET as string,
+      callbackURL: process.env.CALLBACKURL as string,
     },
 
-    async (accessToken, refreshToken, profile, done) => {
-      console.log(profile)
+    async (accessToken, refreshToken, profile:Profile, done) => {
       try {
         // Find the employee by their Google ID
         const existEmployee = await Employee.findOne({ googleId: profile.id });
@@ -45,22 +46,18 @@ passport.use(
         if (existEmployee) {
           console.log('already profile id exist', existEmployee)
         }
-
-       
-
         // Create a new employee if they don't exist
         const newEmployee = await Employee.create({
           googleId: profile.id,
           email: profile.emails?.[0]?.value,
         });
         
-
-       console.log('New employee created:', newEmployee);
-         return done(null,newEmployee);
+        console.log('New employee created:', newEmployee);
+        return done(null, newEmployee);
        
       } catch (error) {
         console.log(error)
-         return done(error as Error); 
+        return done(error as Error);
       };
     }
   ));
