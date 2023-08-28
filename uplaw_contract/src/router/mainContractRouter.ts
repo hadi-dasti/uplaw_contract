@@ -10,7 +10,7 @@ import contractAdminRouter from './contractRouter/admin/adminSite';
 import contractModelRouter from './contractRouter/contract/contractRouter_1';
 import acceptContractRouter from './contractRouter/acceptContract/acceptContractEmployee';
 import cashDataContractRouter from './contractRouter/cashData/cashDataContractRouter';
-import registerAccountGoogelRouter from './contractRouter/account_google/registerAccountGoogleRouter';
+import registerAccountGoogleRouter from './contractRouter/account_google/registerAccountGoogleRouter';
 
 
 
@@ -49,7 +49,7 @@ router.use('/contract/contract_1/acceptContract', acceptContractRouter);
 router.use('/contract/cash_contract', cashDataContractRouter);
 
 //*Implementation router for register employee with account_google
-router.use('/contract/account_google', registerAccountGoogelRouter);
+router.use('/contract/account_google', registerAccountGoogleRouter);
 
 
 export default router;
