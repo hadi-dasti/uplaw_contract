@@ -17,7 +17,6 @@ class AboutMeController {
                 msg: "All fields are required"
             });
         }
-        ;
         // Create aboutMe object using request body
         this.aboutMe = {
             companyName,
@@ -55,9 +54,10 @@ class AboutMeController {
         }
         catch (error) {
             // Return error response for any unexpected errors
+            console.error(error);
             return res.status(500).json({
                 success: false,
-                msg: `internal Server Error:${error.message}`
+                msg: `internal Server Error:${error}`
             });
         }
         ;
