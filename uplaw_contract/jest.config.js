@@ -2,6 +2,7 @@
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
+  moduleFileExtensions: ["ts", "js", "json", "tsx", "jsx"],
   testMatch: ["**/__tests__/**/*.test.ts"],
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
@@ -9,4 +10,9 @@ module.exports = {
   collectCoverage: true,
   coverageReporters: ["html", "text"],
   coverageDirectory: "<rootDir>/coverage",
+  globals: {
+    "ts-jest": {
+      tsconfig: "tsconfig.json",
+    },
+  },
 };
