@@ -1,6 +1,11 @@
 import { Router} from 'express';
 // import chat controller
-import { ShowButtonChatController, sendMessageToServerController,messageToEmployeeController, sendNotifToAllEmployee} from '../../../controller/chat/chatController';
+import {
+    ShowButtonChatController,
+    sendMessageToServerController,
+    messageToEmployeeController,
+    sendNotifToAllEmployee
+} from '../../../controller/chat/chatController';
 
 // setup router 
 const router: Router = Router();

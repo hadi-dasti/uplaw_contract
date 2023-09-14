@@ -48,7 +48,7 @@ export const ShowButtonChatController = (req: Request, res: Response) => {
         }
     }
 
-// start and send message to server
+//  send message  to server 
 export const sendMessageToServerController = async (req: Request, res: Response) => {
     const { message, email } = req.body;
     

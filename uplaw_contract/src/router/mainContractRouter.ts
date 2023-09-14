@@ -11,7 +11,7 @@ import contractModelRouter from './contractRouter/contract/contractRouter_1';
 import acceptContractRouter from './contractRouter/acceptContract/acceptContractEmployee';
 import cashDataContractRouter from './contractRouter/cashData/cashDataContractRouter';
 import registerAccountGoogleRouter from './contractRouter/account_google/registerAccountGoogleRouter';
-
+import buildQueueEmailRouter from './contractRouter/queue_rabitmq/queueRouter';
 
 
  // setup router of Router Express
@@ -50,6 +50,9 @@ router.use('/contract/cash_contract', cashDataContractRouter);
 
 //*Implementation router for register employee with account_google
 router.use('/contract/account_google', registerAccountGoogleRouter);
+
+//Implementation router for queue email for costumer
+router.use('/contract/buildQueue', buildQueueEmailRouter);
 
 
 export default router;
