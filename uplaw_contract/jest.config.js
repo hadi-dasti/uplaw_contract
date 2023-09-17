@@ -10,9 +10,7 @@ module.exports = {
   collectCoverage: true,
   coverageReporters: ["html", "text"],
   coverageDirectory: "<rootDir>/coverage",
-  globals: {
-    "ts-jest": {
-      tsconfig: "tsconfig.json",
-    },
+  transform: {
+    "^.+\\.tsx?$": "ts-jest",
   },
 };
