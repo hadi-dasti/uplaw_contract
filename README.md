@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
-<h1 align="center">Hi 👋, I'm hadi dasti</h1>
-<h3 align="center">A Backend developer from Iran</h3>
 
+<<<<<<< HEAD
 - 🔭 I’m currently working on [uplaw_contract](https://github.com/hadi-dasti/uplaw_contract.git)
 
 - 🌱 I’m currently learning **rabbitmq**
@@ -24,6 +21,8 @@
 
 <<<<<<< HEAD
 >>>>>>> master
+=======
+>>>>>>> d6e91cfb48cd7246e4f4348c7e21c6f1ab238780
 #Contract
 This project is built with Node.js, Express.js, TypeScript, MongoDB, Redis and React.js. It provides a platform for managing contracts
 =======
@@ -124,6 +123,7 @@ ts-jest: A Jest transformer for TypeScript code.
 ts-node-dev: A development server that automatically restarts when code changes.
 typescript: A superset of JavaScript that adds optional static typing.
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 <h1 align="center">Hi 👋, I'm hadi dasti</h1>
@@ -152,3 +152,5 @@ typescript: A superset of JavaScript that adds optional static typing.
 >>>>>>> master
 
 >>>>>>> master
+=======
+>>>>>>> d6e91cfb48cd7246e4f4348c7e21c6f1ab238780
