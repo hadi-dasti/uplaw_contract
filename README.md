@@ -1,5 +1,4 @@
 
-<<<<<<< HEAD
 - 🔭 I’m currently working on [uplaw_contract](https://github.com/hadi-dasti/uplaw_contract.git)
 
 - 🌱 I’m currently learning **rabbitmq**
