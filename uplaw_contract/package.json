@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node build/server.js",
     "dev": "ts-node-dev src/server.ts",
-    "test":"jest --detectOpenHandles",
+    "test": "jest --detectOpenHandles",
     "test:coverage": "jest --coverage"
   },
   "repository": {
@@ -54,7 +54,6 @@
     "@types/nodemailer": "^6.4.7",
     "@types/passport": "^1.0.12",
     "@types/socket.io": "^3.0.2",
-    "amqplib": "^0.10.3",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",

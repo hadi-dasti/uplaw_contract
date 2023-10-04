@@ -56,7 +56,7 @@ const ShowButtonChatController = (req, res) => {
     }
 };
 exports.ShowButtonChatController = ShowButtonChatController;
-// start and send message to server
+//  send message  to server 
 const sendMessageToServerController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { message, email } = req.body;
     try {
